@@ -1,0 +1,115 @@
+{
+  "suite_version": "1.0",
+  "description": "Synthetic golden contracts for MeetingAlign T00-T10. These fixtures test expected rule behavior, not model quality.",
+  "cases": [
+    {
+      "id": "T00",
+      "name": "Raw audio without transcription capability",
+      "source": "A complete .m4a recording is supplied, but the runtime has no reliable complete transcription capability.",
+      "result": {
+        "ingestion": {"status": "blocked"},
+        "decisions": [],
+        "actions": [],
+        "alignment_gaps": [],
+        "roles": [],
+        "understanding_checks": []
+      },
+      "expectations": {"ingestion_status": "blocked", "semantic_output_empty": true}
+    },
+    {
+      "id": "T01",
+      "name": "Suggestion is not a decision",
+      "source": "A: Maybe we should launch Friday. B: Let's not decide that today.",
+      "result": {"decisions": [], "open_questions": ["The launch date remains open."], "actions": []},
+      "expectations": {"decision_count": 0, "must_contain": ["launch date remains open"]}
+    },
+    {
+      "id": "T02",
+      "name": "Rejected work is not an action",
+      "source": "CEO: Don't build export this month.",
+      "result": {"rejected_or_deferred": ["Build export this month."], "actions": []},
+      "expectations": {"must_contain": ["build export"], "actions_must_not_contain": ["build export"]}
+    },
+    {
+      "id": "T03",
+      "name": "Role translation without invention",
+      "source": "CEO: Qualified customer conversations are allowed. No broad launch.",
+      "result": {
+        "decisions": [{"id": "D1", "statement": "Qualified customer conversations are allowed; broad launch is not."}],
+        "role_implications": [
+          {"role": "Marketing", "decision_id": "D1", "text": "Use controlled communication for qualified customer conversations."},
+          {"role": "Sales", "decision_id": "D1", "text": "Limit outreach to qualified customer conversations."}
+        ]
+      },
+      "expectations": {"roles_present": ["Marketing", "Sales"], "role_implications_must_not_match": "\\b[0-9]+\\b", "shared_decision_id": "D1"}
+    },
+    {
+      "id": "T04",
+      "name": "Vague quality becomes a gap",
+      "source": "CEO: Make the dashboard feel credible.",
+      "result": {"alignment_gaps": [{"type": "VAGUE_QUALITY", "phrase": "Make the dashboard feel credible."}]},
+      "expectations": {"required_gap_types": ["VAGUE_QUALITY"]}
+    },
+    {
+      "id": "T05",
+      "name": "Later clarification resolves ambiguity",
+      "source": "CEO: Make it ready. Later: Ready means five pilot users can complete the core flow after onboarding.",
+      "result": {
+        "decisions": [{"id": "D1", "statement": "Ready means five pilot users can complete the core flow after onboarding."}],
+        "alignment_gaps": []
+      },
+      "expectations": {"decision_count": 1, "must_contain": ["five pilot users", "complete the core flow"], "gaps_must_not_contain": ["ready"]}
+    },
+    {
+      "id": "T06",
+      "name": "Missing owner stays visible",
+      "source": "We should track pilot completion every week.",
+      "result": {
+        "actions": [{"action": "Track pilot completion every week.", "owner": "not yet defined"}],
+        "alignment_gaps": [{"type": "MISSING_OWNER", "phrase": "Track pilot completion every week."}]
+      },
+      "expectations": {"action_owner": {"contains": "track pilot completion", "equals": "not yet defined"}, "required_gap_types": ["MISSING_OWNER"]}
+    },
+    {
+      "id": "T07",
+      "name": "Hidden dependency chain",
+      "source": "Marketing needs screenshots. Design says mockups depend on final product scope.",
+      "result": {
+        "dependencies": [
+          {"from": "Product", "to": "Design"},
+          {"from": "Design", "to": "Marketing"}
+        ],
+        "alignment_gaps": [{"type": "HIDDEN_DEPENDENCY", "phrase": "Screenshots depend on mockups, which depend on final scope."}]
+      },
+      "expectations": {"required_dependency_edges": ["Product>Design", "Design>Marketing"], "required_gap_types": ["HIDDEN_DEPENDENCY"]}
+    },
+    {
+      "id": "T08",
+      "name": "No cognitive labeling",
+      "source": "A junior coordinator asks for clarification several times.",
+      "result": {"role_brief": "Explain dependencies and terminology explicitly for the coordinator."},
+      "expectations": {"must_not_contain": ["low intelligence", "low cognition", "incompetent", "attitude problem"]}
+    },
+    {
+      "id": "T09",
+      "name": "Silence is not proof",
+      "source": "Host: Everyone clear? Everyone: Yep.",
+      "result": {"understanding_checks": [{"role_id": "team", "status": "pending"}]},
+      "expectations": {"allowed_check_statuses": ["pending"]}
+    },
+    {
+      "id": "T10",
+      "name": "Same truth, different implications",
+      "source": "Decision: Manual onboarding is allowed for the first pilots.",
+      "result": {
+        "decisions": [{"id": "D1", "statement": "Manual onboarding is allowed for the first pilots."}],
+        "role_implications": [
+          {"role": "Product", "decision_id": "D1", "text": "Self-serve setup may remain outside current scope."},
+          {"role": "Engineering", "decision_id": "D1", "text": "Do not add self-serve onboarding without a new decision."},
+          {"role": "Sales", "decision_id": "D1", "text": "Do not promise self-serve onboarding."}
+        ]
+      },
+      "expectations": {"roles_present": ["Product", "Engineering", "Sales"], "shared_decision_id": "D1"}
+    }
+  ]
+}

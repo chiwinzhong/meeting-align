@@ -1,0 +1,49 @@
+name: Alignment error
+description: Report an incorrect Meeting Truth, role implication, or alignment gap using synthetic or authorized content only.
+title: "[Alignment error] "
+labels: ["bug", "alignment-error"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not submit confidential recordings, personal data, customer information, or content you are not authorized to publish. Redact the excerpt or replace it with a synthetic equivalent.
+  - type: textarea
+    id: source
+    attributes:
+      label: Redacted or synthetic source excerpt
+      description: Include only the minimum text needed to reproduce the interpretation error.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected interpretation
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual interpretation
+    validations:
+      required: true
+  - type: dropdown
+    id: error_type
+    attributes:
+      label: Error type
+      options:
+        - Meeting Truth
+        - Role translation
+        - Alignment gap
+        - Owner or deadline
+        - Definition of done
+        - Dependency
+        - Audio ingestion
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Why this matters for execution
+    validations:
+      required: true

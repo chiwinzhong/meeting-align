@@ -8,7 +8,9 @@
 
 > **所有人都说“明白”。问题是，每个人明白的都不一样。**
 
-**MeetingAlign 是一个开源、证据感知的 Agent Skill：把完整会议记录转化为唯一会议事实、不同岗位的行动说明和可见的认知缺口。**
+**MeetingAlign 是一个开源、证据感知的 Agent Skill：把完整会议录音或转写稿转化为唯一会议事实、不同岗位的行动说明和可见的认知缺口。**
+
+原始录音必须先通过可追溯的转写质量门，MeetingAlign 不会用一份音频摘要冒充完整会议证据。
 
 **会议 → 共同理解 → 角色行动**
 
@@ -68,18 +70,26 @@ MeetingAlign 专门处理**会议与执行之间的认知断层**。
 
 没有回复就保持待确认，不把沉默当作同意。
 
-## 从转写稿到共同执行
+## 音频安全输入
+
+MeetingAlign 不宣称内置语音识别引擎。遇到原始音频或视频时，它调用已获授权运行环境中可靠的转写能力，保留时间戳和发言轮次，并且只在完整转写覆盖可用后进入语义分析。
+
+如果无法获得可靠转写，它会返回 `INGESTION_BLOCKED`，不生成决策、任务、角色说明或认知缺口，也不会仅凭声音猜测发言人身份。
+
+## 从录音到共同执行
 
 ```mermaid
 flowchart LR
-    A["完整会议记录"] --> B["证据与决策分类"]
-    B --> C["唯一 Meeting Truth"]
-    C --> D["关键角色"]
-    C --> E["认知缺口"]
-    D --> F["角色行动版"]
-    E --> G["Host View"]
-    F --> H["理解确认"]
-    G --> H
+    A["录音或转写稿"] --> B{"转写质量门"}
+    B -- "未通过" --> X["停止，不生成语义结果"]
+    B -- "已通过" --> C["证据与决策分类"]
+    C --> D["唯一 Meeting Truth"]
+    D --> E["关键角色"]
+    D --> F["认知缺口"]
+    E --> G["角色行动版"]
+    F --> H["Host View"]
+    G --> I["理解确认"]
+    H --> I
 ```
 
 所有角色说明都从同一个会议事实母版派生。可以翻译岗位含义，但不能为不同部门重写不同版本的决策。
@@ -90,6 +100,7 @@ flowchart LR
 - [角色翻译](methodology/role-translation.md)
 - [认知缺口模型](methodology/alignment-gap.md)
 - [Alignment Score 边界](methodology/alignment-score.md)
+- [音频输入合同](skills/meeting-align/references/audio-ingestion.md)
 - [系统架构](docs/architecture.md)
 
 ## 直接看完整 Demo
@@ -116,7 +127,7 @@ cp -R meeting-align/skills/meeting-align ~/.codex/skills/
 调用示例：
 
 ```text
-使用 $meeting-align 处理这份完整会议记录。输出唯一 Meeting Truth、Host View、角色行动版，以及真正可能改变执行结果的认知缺口。不得补造负责人、截止日期或验收标准。
+使用 $meeting-align 处理这份完整会议录音或转写稿。若输入是录音，先通过转写质量门。输出唯一 Meeting Truth、Host View、角色行动版，以及真正可能改变执行结果的认知缺口。不得补造转写覆盖、发言人身份、负责人、截止日期或验收标准。
 ```
 
 本 Skill 遵循开放 Agent Skills 目录结构。其他 Agent 环境可以适配，但本仓库不宣称未经测试的一键兼容。
@@ -129,14 +140,22 @@ python3 skills/meeting-align/scripts/validate_meeting_align.py \
 
 python3 skills/meeting-align/scripts/run_contract_tests.py \
   examples/launch-meeting/meeting-align.json
+
+python3 tools/run_adversarial_contracts.py \
+  tests/adversarial-contracts.json
 ```
 
 负例测试会拦截：
 
 - 决策引用不存在的证据；
+- 在录音转写被阻断后仍然生成语义决策；
+- 把不完整录音覆盖表述成完整转写；
 - 把 AI 建议升级为会议决策；
+- 把已否决工作升级为行动；
 - 用完整表述掩盖“没有验收标准”；
 - 把沉默当作理解一致。
+
+T00–T10 是确定性的黄金合同基线，不代表所有模型或运行环境都会自动生成预期结果。
 
 ## 与普通会议工具的区别
 
@@ -159,10 +178,12 @@ MeetingAlign 不替代项目管理、法律纪要、专业主持或管理判断�
 
 会议记录可能包含战略、人事、客户和敏感决策：
 
+- 确认有权在所选环境中录音、转写、保存和处理源文件；
 - 只在可信工作流中处理；
 - 最小化复制内容和访问范围；
 - 尽可能脱敏个人及受监管信息；
 - 所有重要决策和缺口必须回到原始记录核验；
+- 发言人身份无法可靠对应时使用中性标签，不通过声音识别人；
 - 未经明确授权，不发送角色说明、不创建任务、不通知参与者、不写入组织长期记忆；
 - 沉默永远保持待确认。
 
@@ -170,27 +191,30 @@ MeetingAlign 不替代项目管理、法律纪要、专业主持或管理判断�
 
 ## 当前证据状态
 
-**公开预览 · v0.2.0**
+**公开预览 · v0.3.0 — Audio-Safe Ingestion**
 
 当前仓库包括：
 
 - 可检查的 Agent Skill；
 - 完整虚构端到端 Demo；
+- 不绑定转写供应商的录音输入边界与质量门；
 - 机器可读合同与零依赖验证器；
-- 可复现的正向和负向测试；
+- 可复现的正向和负向测试，包括十一项虚构对抗合同；
 - 中英文文档。
 
-目前**没有**独立验证证据证明 MeetingAlign 能提高交付速度、降低返工或改变业务结果。详见[评价协议](docs/evaluation.md)。
+当前版本**不包含内置语音识别引擎**，也**没有**独立验证证据证明 MeetingAlign 能提高交付速度、降低返工或改变业务结果。详见[评价协议](docs/evaluation.md)。
 
 ## Roadmap
 
 ### V0.x｜开放 Skill
 
 - 会议事实母版
+- 音频安全输入质量门
 - 角色识别与行动版
 - 认知缺口
 - 理解确认
 - 解释型评分
+- T00–T10 对抗合同
 
 ### V1.x｜团队工作流
 

@@ -7,6 +7,6 @@ authors:
     given-names: "Zhiying"
 repository-code: "https://github.com/chiwinzhong/meeting-align"
 license: MIT
-version: 0.2.0
+version: 0.3.0
 date-released: 2026-08-18
-abstract: "An open-source Agent Skill that turns complete meeting transcripts into shared meeting truth, role-specific action briefs, and visible alignment gaps."
+abstract: "An open-source Agent Skill that turns complete meeting recordings or transcripts into shared meeting truth, role-specific action briefs, and visible alignment gaps through a traceable transcription quality gate."

@@ -8,7 +8,9 @@
 
 > **Everyone said “Got it.” Everyone meant something different.**
 
-**MeetingAlign is an open-source, evidence-aware Agent Skill that turns a complete meeting transcript into one shared Meeting Truth, role-specific action briefs, and visible alignment gaps.**
+**MeetingAlign is an open-source, evidence-aware Agent Skill that turns a complete meeting recording or transcript into one shared Meeting Truth, role-specific action briefs, and visible alignment gaps.**
+
+Raw recordings pass through a traceable transcription quality gate before interpretation. MeetingAlign never substitutes an audio summary for the complete source transcript.
 
 **Meeting → Shared understanding → Role-specific action**
 
@@ -68,18 +70,26 @@ MeetingAlign flags material ambiguity—vague time, quality, or completion; miss
 
 Silence remains pending.
 
-## From transcript to shared execution
+## Audio-safe ingestion
+
+MeetingAlign does not claim to contain its own speech-recognition engine. For raw audio or video, it uses a reliable transcription capability available in the authorized runtime, preserves timestamps and speaker turns, and enters semantic analysis only after complete transcript coverage is available.
+
+If reliable transcription is unavailable, it returns `INGESTION_BLOCKED` and produces no decisions, actions, role briefs, or Alignment Gaps. It never guesses speaker identity from voice alone.
+
+## From recording to shared execution
 
 ```mermaid
 flowchart LR
-    A["Complete transcript"] --> B["Evidence and decision model"]
-    B --> C["One Meeting Truth"]
-    C --> D["Key roles"]
-    C --> E["Alignment gaps"]
-    D --> F["Role briefs"]
-    E --> G["Host View"]
-    F --> H["Understanding checks"]
-    G --> H
+    A["Recording or transcript"] --> B{"Transcript quality gate"}
+    B -- "Blocked" --> X["Stop without semantic output"]
+    B -- "Ready" --> C["Evidence and decision model"]
+    C --> D["One Meeting Truth"]
+    D --> E["Key roles"]
+    D --> F["Alignment gaps"]
+    E --> G["Role briefs"]
+    F --> H["Host View"]
+    G --> I["Understanding checks"]
+    H --> I
 ```
 
 All role briefs derive from the same Meeting Truth. The Skill may translate professional implications; it may not rewrite the decision for each function.
@@ -90,6 +100,7 @@ All role briefs derive from the same Meeting Truth. The Skill may translate prof
 - [Role translation](methodology/role-translation.md)
 - [Alignment-gap model](methodology/alignment-gap.md)
 - [Alignment Score limits](methodology/alignment-score.md)
+- [Audio-ingestion contract](skills/meeting-align/references/audio-ingestion.md)
 - [System architecture](docs/architecture.md)
 
 ## See the complete demo
@@ -116,7 +127,7 @@ cp -R meeting-align/skills/meeting-align ~/.codex/skills/
 Then invoke:
 
 ```text
-Use $meeting-align on this complete meeting transcript. Create one Meeting Truth, a Host View, role briefs, and only the alignment gaps that can materially change execution. Do not invent missing owners, deadlines, or definitions of done.
+Use $meeting-align on this complete meeting recording or transcript. If it is a recording, pass the transcription quality gate first. Create one Meeting Truth, a Host View, role briefs, and only the alignment gaps that can materially change execution. Do not invent transcript coverage, speaker identity, owners, deadlines, or definitions of done.
 ```
 
 The Skill follows the open Agent Skills folder structure. Other agent environments may be supported through adaptation, but this repository does not claim untested one-click compatibility.
@@ -129,14 +140,22 @@ python3 skills/meeting-align/scripts/validate_meeting_align.py \
 
 python3 skills/meeting-align/scripts/run_contract_tests.py \
   examples/launch-meeting/meeting-align.json
+
+python3 tools/run_adversarial_contracts.py \
+  tests/adversarial-contracts.json
 ```
 
 The negative tests reject:
 
 - decisions linked to unknown evidence;
+- semantic decisions produced from a blocked recording;
+- partial recording coverage presented as complete;
 - AI suggestions promoted into meeting decisions;
+- rejected work promoted into an action;
 - action records that hide a missing definition of done;
 - silence treated as confirmation.
+
+The T00–T10 suite is a deterministic golden-contract baseline, not evidence that every model or runtime will generate the expected result.
 
 ## What makes it different
 
@@ -159,10 +178,12 @@ It is **not** a scientific measure of people, intelligence, culture, meeting qua
 
 Meeting transcripts can contain strategy, personnel information, customer data, and confidential decisions.
 
+- Confirm authority to record, transcribe, retain, and process the source in the selected environment.
 - Keep data in a workflow you trust.
 - Minimize copied content and access.
 - Redact personal and regulated information when possible.
 - Review every major decision and gap against the source.
+- Use neutral speaker labels when identity cannot be mapped reliably; never identify people from voice alone.
 - Do not send briefs, create tasks, notify participants, or update organizational memory without explicit authorization.
 - Treat silence as pending, never approval.
 
@@ -170,27 +191,30 @@ See [Security and privacy](docs/security-and-privacy.md).
 
 ## Current evidence status
 
-**Public preview · v0.2.0**
+**Public preview · v0.3.0 — Audio-Safe Ingestion**
 
 The repository currently provides:
 
 - an inspectable Agent Skill;
 - a complete synthetic end-to-end demo;
+- a runtime-independent recording-ingestion boundary and quality gate;
 - a machine-readable contract and dependency-free validator;
-- deterministic positive and negative tests;
+- deterministic positive and negative tests, including eleven synthetic adversarial contracts;
 - bilingual documentation.
 
-It does **not** yet provide independently reviewed evidence that MeetingAlign improves delivery speed, reduces rework, or changes business outcomes. See [Evaluation protocol](docs/evaluation.md).
+It does **not** contain a built-in speech-recognition engine, and it does **not** yet provide independently reviewed evidence that MeetingAlign improves delivery speed, reduces rework, or changes business outcomes. See [Evaluation protocol](docs/evaluation.md).
 
 ## Roadmap
 
 ### V0.x — Open Skill
 
 - Meeting Truth
+- audio-safe ingestion gate
 - role detection and briefs
 - alignment gaps
 - understanding checks
 - explanatory score
+- T00–T10 adversarial contracts
 
 ### V1.x — Team workflow
 

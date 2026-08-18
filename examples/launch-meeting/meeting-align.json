@@ -1,5 +1,15 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "ingestion": {
+    "input_type": "transcript",
+    "status": "not_required",
+    "transcript_path": "transcript.md",
+    "coverage": "complete",
+    "speaker_labels": "named",
+    "timestamps": "full",
+    "adapter": "not required — synthetic transcript supplied",
+    "limitations": ["The transcript and all participants are synthetic."]
+  },
   "meeting": {
     "id": "DEMO-2026-001",
     "title": "Northstar private pilot readiness",

@@ -1,6 +1,6 @@
 ---
 name: meeting-align
-description: Turn a complete meeting transcript, recording transcript, or detailed meeting record into one traceable Meeting Truth, a host control view, role-specific action briefs, visible alignment gaps, and lightweight understanding checks. Use when a team needs to distinguish decisions from discussion, translate one shared decision for product, engineering, design, marketing, sales, operations, or other roles, expose vague deadlines and definitions of done, document dependencies, or prevent everyone from leaving the same meeting with different meanings. Do not use it to invent decisions, owners, deadlines, acceptance criteria, authority, or employee-performance judgments, and do not send briefs or update project systems without explicit authorization.
+description: Turn a complete meeting recording, transcript, or detailed meeting record into one traceable Meeting Truth, a host control view, role-specific action briefs, visible alignment gaps, and lightweight understanding checks. Use when a team needs to distinguish decisions from discussion, safely transcribe raw audio or video before interpretation, translate one shared decision for product, engineering, design, marketing, sales, operations, or other roles, expose vague deadlines and definitions of done, document dependencies, or prevent everyone from leaving the same meeting with different meanings. Do not use it to invent transcription coverage, speaker identity, decisions, owners, deadlines, acceptance criteria, authority, or employee-performance judgments, and do not send briefs or update project systems without explicit authorization.
 ---
 
 # MeetingAlign
@@ -11,13 +11,14 @@ Do not merely summarize the meeting. Align the people around one shared, traceab
 
 Produce a governed package containing:
 
-1. one canonical `meeting-truth.md`;
-2. one `host-view.md` focused on execution control;
-3. one `alignment-gaps.md` showing only material ambiguity;
-4. one brief for each key execution role;
-5. lightweight understanding checks;
-6. source pointers for major decisions and gaps;
-7. optional `meeting-align.json` for validation and downstream handoff.
+1. a traceable `transcript.md` when the source is a recording;
+2. one canonical `meeting-truth.md`;
+3. one `host-view.md` focused on execution control;
+4. one `alignment-gaps.md` showing only material ambiguity;
+5. one brief for each key execution role;
+6. lightweight understanding checks;
+7. source pointers for major decisions and gaps;
+8. optional `meeting-align.json` for validation and downstream handoff.
 
 All derivatives must use the same Meeting Truth. Never create a different underlying decision for a different role.
 
@@ -32,6 +33,8 @@ All derivatives must use the same Meeting Truth. Never create a different underl
 - Preserve missing owners, deadlines, definitions of done, and dependencies as visible gaps.
 - Do not infer intelligence, competence, attitude, or employee performance.
 - Do not expose confidential meeting content beyond the authorized audience.
+- Do not guess participant identity from voice alone or infer protected or biometric traits.
+- Do not upload a recording to an external transcription service without authority to process it there.
 - Do not send briefs, update project tools, create tasks, or publish any output without explicit human authorization.
 
 ## Step 1 — Establish the meeting contract
@@ -44,12 +47,29 @@ Determine from the input:
 - requested outputs and intended audience;
 - confidentiality, redaction, and storage requirements;
 - whether an authorized host or decision-maker will review the package.
+- whether the operator is authorized to record, transcribe, retain, and process the source in the selected environment.
 
-If only audio or video is supplied, transcribe it when the environment has a reliable transcription capability. Otherwise request a transcript and state the limitation. Never claim to have reviewed audio that was not processed.
+Classify the input as `recording`, `transcript`, or `detailed_record`.
 
 Ask for clarification only when missing information would materially change a major decision, owner, scope, high-risk action, or confidential distribution boundary. Continue with `not yet defined` for ordinary gaps.
 
-## Step 2 — Reconstruct before summarizing
+## Step 2 — Ingest raw audio or video safely
+
+Run this step only for a raw recording. Read [references/audio-ingestion.md](references/audio-ingestion.md) before processing it.
+
+- Use a reliable transcription capability already available in the authorized runtime; do not require one named provider.
+- Preserve chronological order, speaker turns, useful timestamps, corrections, reversals, disagreement, mixed-language source wording, and explicit uncertainty markers.
+- Use supplied names only when mapping is reliable. Otherwise use neutral labels such as `Speaker A` and `Speaker B`.
+- Reassemble long recordings into one ordered transcript before interpreting the meeting.
+- Never substitute an upstream audio summary for a traceable transcript.
+
+Enter semantic analysis only when transcript coverage is sufficient to support meeting-wide decisions. If it is not, return:
+
+`INGESTION_BLOCKED — Raw recording received, but no reliable complete transcription is available in the current runtime.`
+
+Then stop. Do not infer Meeting Truth, actions, owners, or gaps from metadata, isolated samples, or a partial audio summary.
+
+## Step 3 — Reconstruct before summarizing
 
 Read the complete transcript. Identify:
 
@@ -64,7 +84,7 @@ Read the complete transcript. Identify:
 
 Read [references/evidence-and-decision-model.md](references/evidence-and-decision-model.md) and apply its classification rules. Preserve a short speaker/timestamp or section pointer for every high-impact decision and gap.
 
-## Step 3 — Build one Meeting Truth
+## Step 4 — Build one Meeting Truth
 
 Create the canonical fact base before writing role briefs.
 
@@ -82,7 +102,7 @@ Include:
 
 Mark missing fields `not yet defined`. If two speakers conflict, preserve both positions and classify the item as open unless a later statement clearly resolves it.
 
-## Step 4 — Identify key roles
+## Step 5 — Identify key roles
 
 Classify relevant participants by meeting function:
 
@@ -98,7 +118,7 @@ Infer a professional domain only when the transcript supports it. Read [referenc
 
 If a critical owner cannot be inferred, expose the missing-owner gap. Do not ask the user to label every participant by default.
 
-## Step 5 — Detect material alignment gaps
+## Step 6 — Detect material alignment gaps
 
 Read [references/alignment-gaps-and-score.md](references/alignment-gaps-and-score.md).
 
@@ -127,7 +147,7 @@ For each material gap record:
 
 Do not flag harmless conversational ambiguity. Prioritize the smallest set of gaps capable of changing execution.
 
-## Step 6 — Generate the Host View
+## Step 7 — Generate the Host View
 
 Create a compact control surface, not another narrative summary.
 
@@ -146,7 +166,7 @@ Include:
 
 Lead with the few issues most likely to break execution.
 
-## Step 7 — Generate role briefs
+## Step 8 — Generate role briefs
 
 For each key execution role, answer exactly these six questions:
 
@@ -169,7 +189,7 @@ If X, Y, or Z is missing, write `not yet defined`. Offer only:
 
 Translate shared decisions into role implications without rewriting the facts or inventing a strategy.
 
-## Step 8 — Use the Alignment Score carefully
+## Step 9 — Use the Alignment Score carefully
 
 The score is optional. Use it only when the user or host wants a compact diagnostic.
 
@@ -178,7 +198,7 @@ The score is optional. Use it only when the user or host wants a compact diagnos
 - Do not present it as a scientific measure of people, culture, intelligence, competence, or organizational performance.
 - Never use it for employee ranking, compensation, discipline, or surveillance.
 
-## Step 9 — Validate the package
+## Step 10 — Validate the package
 
 Use the human-readable structure in [references/output-contract.md](references/output-contract.md). When structured output is requested, conform to [references/meeting-align.schema.json](references/meeting-align.schema.json).
 
@@ -190,7 +210,7 @@ python3 scripts/validate_meeting_align.py path/to/meeting-align.json
 
 Fix every contract failure before presenting a package as reviewed or ready for downstream use.
 
-## Step 10 — Stop at the external-action gate
+## Step 11 — Stop at the external-action gate
 
 MeetingAlign may prepare files and understanding checks. It may not:
 
@@ -207,6 +227,8 @@ Require explicit authorization for the exact audience, channel, and action. Reco
 
 Before delivery, verify:
 
+- raw recordings passed the ingestion quality gate before semantic analysis;
+- the transcript preserves source order, uncertainty, and neutral speaker labeling where identity is unverified;
 - every role brief derives from the same Meeting Truth;
 - every major decision has a source pointer;
 - discussion, proposals, decisions, and actions remain distinct;

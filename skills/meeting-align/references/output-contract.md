@@ -4,6 +4,7 @@
 
 ```text
 meeting-package/
+├── transcript.md             # when the source is a recording
 ├── meeting-truth.md
 ├── host-view.md
 ├── alignment-gaps.md
@@ -12,6 +13,10 @@ meeting-package/
 │   └── <role>.md
 └── meeting-align.json
 ```
+
+## `transcript.md`
+
+For recording inputs, preserve chronological order, speaker turns, useful timestamps, uncertainty markers, and source-language wording where meaning could drift. Do not enter semantic analysis when reliable complete transcription is unavailable.
 
 ## `meeting-truth.md`
 
@@ -67,4 +72,6 @@ Silence remains `pending`.
 
 ## `meeting-align.json`
 
-Use [meeting-align.schema.json](meeting-align.schema.json). Structured output exists for validation and handoff; Markdown remains the human-facing package.
+Use [meeting-align.schema.json](meeting-align.schema.json). Schema `1.1` adds the `ingestion` object with input type, quality-gate status, transcript path, coverage, speaker-label status, timestamp status, adapter, and limitations. A blocked recording must contain no semantic meeting output.
+
+Structured output exists for validation and handoff; Markdown remains the human-facing package.
