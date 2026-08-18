@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "meeting": {
+    "id": "MEETING_ID",
+    "title": "",
+    "date": "",
+    "purpose": "",
+    "source_status": "complete"
+  },
+  "evidence": [],
+  "decisions": [],
+  "rejected_or_deferred": [],
+  "open_questions": [],
+  "actions": [],
+  "alignment_gaps": [],
+  "roles": [],
+  "understanding_checks": [],
+  "alignment_score": null,
+  "review": {
+    "status": "draft",
+    "reviewer": "not yet defined",
+    "external_actions_authorized": false
+  },
+  "limitations": ["Replace placeholders and review the complete transcript before approval."]
+}

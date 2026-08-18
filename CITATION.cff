@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use MeetingAlign in research or practice, please cite this repository."
+title: "MeetingAlign"
+type: software
+authors:
+  - family-names: "Zhong"
+    given-names: "Zhiying"
+repository-code: "https://github.com/chiwinzhong/meeting-align"
+license: MIT
+version: 0.2.0
+date-released: 2026-08-18
+abstract: "An open-source Agent Skill that turns complete meeting transcripts into shared meeting truth, role-specific action briefs, and visible alignment gaps."

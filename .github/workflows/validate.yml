@@ -1,0 +1,29 @@
+name: Validate MeetingAlign
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate Skill package
+        run: python3 tools/validate_skill_package.py
+      - name: Validate example output
+        run: python3 skills/meeting-align/scripts/validate_meeting_align.py examples/launch-meeting/meeting-align.json
+      - name: Run contract tests
+        run: python3 skills/meeting-align/scripts/run_contract_tests.py examples/launch-meeting/meeting-align.json
+      - name: Check Python and JSON syntax
+        run: |
+          python3 -m compileall -q skills/meeting-align/scripts tools
+          python3 -m json.tool skills/meeting-align/references/meeting-align.schema.json >/dev/null
+          python3 -m json.tool skills/meeting-align/assets/meeting-align-template.json >/dev/null
+          python3 -m json.tool examples/launch-meeting/meeting-align.json >/dev/null

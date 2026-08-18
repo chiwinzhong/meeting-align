@@ -1,0 +1,416 @@
+{
+  "schema_version": "1.0",
+  "meeting": {
+    "id": "DEMO-2026-001",
+    "title": "Northstar private pilot readiness",
+    "date": "2026-08-18",
+    "purpose": "Define what ready by month-end means and align five execution functions around one private-pilot milestone.",
+    "source_status": "complete"
+  },
+  "evidence": [
+    {
+      "id": "E01",
+      "type": "CONFIRMED_DECISION",
+      "text": "August 31 means private-pilot readiness for five selected customers, not public launch.",
+      "pointer": "Maya 01:20; reaffirmed 10:22",
+      "confidence": "high"
+    },
+    {
+      "id": "E02",
+      "type": "CONFIRMED_DECISION",
+      "text": "Pilot scope is invite, brief, and review; analytics and SSO are deferred.",
+      "pointer": "Lena 00:42; Maya 01:20",
+      "confidence": "high"
+    },
+    {
+      "id": "E03",
+      "type": "CONFIRMED_DECISION",
+      "text": "Design acceptance uses clear hierarchy, restrained color and motion, plus empty, loading, and error states.",
+      "pointer": "Priya 03:54; Maya 04:28",
+      "confidence": "high"
+    },
+    {
+      "id": "E04",
+      "type": "CONFIRMED_DECISION",
+      "text": "Marketing prepares only a pilot onboarding email and one-page overview; no public campaign or broad announcement.",
+      "pointer": "Maya 05:55",
+      "confidence": "high"
+    },
+    {
+      "id": "E05",
+      "type": "CONFIRMED_DECISION",
+      "text": "Sales selects five existing customers with workflow fit and weekly-feedback agreement, without pricing or production-readiness promises.",
+      "pointer": "Maya 07:15 and 08:07",
+      "confidence": "high"
+    },
+    {
+      "id": "E06",
+      "type": "CONFIRMED_FACT",
+      "text": "Production pilot access depends on a security review.",
+      "pointer": "Omar 02:30",
+      "confidence": "high"
+    },
+    {
+      "id": "E07",
+      "type": "OPEN_QUESTION",
+      "text": "Security review owner, scope, date, and data-retention requirements are unresolved.",
+      "pointer": "Omar 03:10 and 08:28; Maya 08:38",
+      "confidence": "high"
+    },
+    {
+      "id": "E08",
+      "type": "OPEN_QUESTION",
+      "text": "Pilot support response time and Engineering escalation path are unresolved.",
+      "pointer": "Mia 08:58; Lena 09:08; Maya 09:18",
+      "confidence": "high"
+    },
+    {
+      "id": "E09",
+      "type": "OPEN_QUESTION",
+      "text": "Weekly feedback collection, synthesis ownership, and format are unresolved.",
+      "pointer": "Eli 09:42; Lena 09:49; Maya 10:05",
+      "confidence": "high"
+    },
+    {
+      "id": "E10",
+      "type": "CONFIRMED_DECISION",
+      "text": "Maya will obtain a security-review owner, scope, and review date from Operations by 6 p.m. on the meeting date.",
+      "pointer": "Maya 03:25",
+      "confidence": "high"
+    },
+    {
+      "id": "E11",
+      "type": "CONFIRMED_DECISION",
+      "text": "Product will publish the frozen scope and acceptance list by August 20.",
+      "pointer": "Lena 01:58",
+      "confidence": "high"
+    },
+    {
+      "id": "E12",
+      "type": "CONFIRMED_DECISION",
+      "text": "Engineering will deliver the tested core flow in staging by August 28.",
+      "pointer": "Omar 02:30",
+      "confidence": "high"
+    },
+    {
+      "id": "E13",
+      "type": "CONFIRMED_DECISION",
+      "text": "Design will complete core states by August 24 and review them with Product on August 26.",
+      "pointer": "Priya 04:37; Lena 05:08",
+      "confidence": "high"
+    },
+    {
+      "id": "E14",
+      "type": "CONFIRMED_DECISION",
+      "text": "Product supplies approved pilot wording by August 27; Marketing delivers two pilot materials by August 29.",
+      "pointer": "Lena 06:16; Mia 06:42",
+      "confidence": "high"
+    },
+    {
+      "id": "E15",
+      "type": "CONFIRMED_DECISION",
+      "text": "Sales delivers the five-customer list by August 22.",
+      "pointer": "Maya 07:15; Eli 07:43",
+      "confidence": "high"
+    },
+    {
+      "id": "E16",
+      "type": "CONFIRMED_DECISION",
+      "text": "Product will bring a support and feedback operating proposal to the August 26 review.",
+      "pointer": "Maya 09:18 and 10:05",
+      "confidence": "medium"
+    },
+    {
+      "id": "E17",
+      "type": "REJECTED_OPTION",
+      "text": "Public launch, production-readiness claims, and pricing promises are outside the milestone.",
+      "pointer": "Maya 05:55, 07:15, 08:07",
+      "confidence": "high"
+    },
+    {
+      "id": "E18",
+      "type": "DEFERRED_OPTION",
+      "text": "Analytics and SSO are deferred beyond the August milestone.",
+      "pointer": "Maya 01:20",
+      "confidence": "high"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D01",
+      "statement": "August 31 means private-pilot readiness for five selected customers, not public launch.",
+      "evidence_ids": ["E01"]
+    },
+    {
+      "id": "D02",
+      "statement": "Pilot scope is invite, brief, and review; analytics and SSO are deferred.",
+      "evidence_ids": ["E02"]
+    },
+    {
+      "id": "D03",
+      "statement": "Design acceptance covers hierarchy, restrained color and motion, and all core states.",
+      "evidence_ids": ["E03"]
+    },
+    {
+      "id": "D04",
+      "statement": "Marketing produces only private-pilot materials.",
+      "evidence_ids": ["E04"]
+    },
+    {
+      "id": "D05",
+      "statement": "Sales selects five suitable existing customers and makes no pricing or production-readiness promise.",
+      "evidence_ids": ["E05"]
+    }
+  ],
+  "rejected_or_deferred": [
+    {
+      "id": "R01",
+      "statement": "Public launch, production-readiness claims, and pricing promises are rejected for this milestone.",
+      "evidence_ids": ["E17"]
+    },
+    {
+      "id": "R02",
+      "statement": "Analytics and SSO are deferred.",
+      "evidence_ids": ["E18"]
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "Q01",
+      "statement": "Who owns the security review, what is its scope, when will it occur, and what data-retention rule applies?",
+      "evidence_ids": ["E07"]
+    },
+    {
+      "id": "Q02",
+      "statement": "What support response time and Engineering escalation path will apply?",
+      "evidence_ids": ["E08"]
+    },
+    {
+      "id": "Q03",
+      "statement": "Who owns weekly feedback collection and synthesis, and what format will be used?",
+      "evidence_ids": ["E09"]
+    }
+  ],
+  "actions": [
+    {
+      "id": "A01",
+      "action": "Publish frozen scope and acceptance list.",
+      "owner": "Lena Park / Product",
+      "deadline": "2026-08-20",
+      "definition_of_done": "Each core step names the user action, expected response, and sign-off owner.",
+      "dependencies": ["Confirmed pilot scope"],
+      "evidence_ids": ["E11"]
+    },
+    {
+      "id": "A02",
+      "action": "Name the security-review owner, scope, and review date.",
+      "owner": "Maya Chen / CEO",
+      "deadline": "2026-08-18T18:00:00+08:00",
+      "definition_of_done": "Operations provides all three fields.",
+      "dependencies": ["Operations response"],
+      "evidence_ids": ["E10"]
+    },
+    {
+      "id": "A03",
+      "action": "Complete all core-flow design states.",
+      "owner": "Priya Shah / Design",
+      "deadline": "2026-08-24",
+      "definition_of_done": "Happy, empty, loading, and error states meet the three confirmed design criteria.",
+      "dependencies": ["A01"],
+      "evidence_ids": ["E13"]
+    },
+    {
+      "id": "A04",
+      "action": "Run and record the design acceptance review.",
+      "owner": "Lena Park + Priya Shah",
+      "deadline": "2026-08-26",
+      "definition_of_done": "Every state is approved or has a named issue owner and due date.",
+      "dependencies": ["A03"],
+      "evidence_ids": ["E13"]
+    },
+    {
+      "id": "A05",
+      "action": "Deliver the tested core flow in staging.",
+      "owner": "Omar Reid / Engineering",
+      "deadline": "2026-08-28",
+      "definition_of_done": "Invite, brief, and review complete on the supported browser and automated core-flow tests pass.",
+      "dependencies": ["A01", "A03"],
+      "evidence_ids": ["E12"]
+    },
+    {
+      "id": "A06",
+      "action": "Provide approved pilot product wording.",
+      "owner": "Lena Park / Product",
+      "deadline": "2026-08-27",
+      "definition_of_done": "Copy states the three-step scope and labels analytics and SSO unavailable.",
+      "dependencies": ["A01"],
+      "evidence_ids": ["E14"]
+    },
+    {
+      "id": "A07",
+      "action": "Deliver the pilot onboarding email and one-page overview.",
+      "owner": "Mia Torres / Marketing",
+      "deadline": "2026-08-29",
+      "definition_of_done": "Links work, copy matches Product's approved scope, and Maya approves the wording.",
+      "dependencies": ["A06", "Q02"],
+      "evidence_ids": ["E14"]
+    },
+    {
+      "id": "A08",
+      "action": "Select five pilot customers.",
+      "owner": "Eli Brooks / Sales",
+      "deadline": "2026-08-22",
+      "definition_of_done": "Each record includes workflow fit, main contact, and weekly-feedback confirmation.",
+      "dependencies": ["D01", "D05"],
+      "evidence_ids": ["E15"]
+    },
+    {
+      "id": "A09",
+      "action": "Propose the support and feedback operating model.",
+      "owner": "Lena Park / Product",
+      "deadline": "2026-08-26",
+      "definition_of_done": "Proposal names support response time, Engineering escalation, feedback owner, and feedback format.",
+      "dependencies": ["Input from Engineering and Sales"],
+      "evidence_ids": ["E16"]
+    }
+  ],
+  "alignment_gaps": [
+    {
+      "id": "AG01",
+      "type": "MISSING_OWNER",
+      "risk": "high",
+      "phrase": "Production pilot access still depends on a security review.",
+      "what_is_known": "Security approval is required before production pilot access.",
+      "what_is_missing": "Owner, scope, review date, and acceptance outcome.",
+      "clarification_owner": "Maya Chen with Operations",
+      "evidence_ids": ["E06", "E07", "E10"]
+    },
+    {
+      "id": "AG02",
+      "type": "MISSING_PARTICIPANT",
+      "risk": "high",
+      "phrase": "We still need a decision on data retention for pilot briefs.",
+      "what_is_known": "The question belongs inside the security review.",
+      "what_is_missing": "Policy owner, retention period, deletion behavior, and customer wording.",
+      "clarification_owner": "Security-review owner once named",
+      "evidence_ids": ["E07"]
+    },
+    {
+      "id": "AG03",
+      "type": "MISSING_DEFINITION_OF_DONE",
+      "risk": "medium",
+      "phrase": "Product can triage.",
+      "what_is_known": "Product will propose an operating model on August 26.",
+      "what_is_missing": "Contact, response time, severity definition, and Engineering escalation.",
+      "clarification_owner": "Lena Park with Engineering",
+      "evidence_ids": ["E08", "E16"]
+    },
+    {
+      "id": "AG04",
+      "type": "HIDDEN_DEPENDENCY",
+      "risk": "medium",
+      "phrase": "Who collects the weekly customer feedback?",
+      "what_is_known": "Selected customers must agree to weekly feedback.",
+      "what_is_missing": "Collection owner, synthesis owner, format, cadence, and decision-use path.",
+      "clarification_owner": "Lena Park and Eli Brooks",
+      "evidence_ids": ["E09", "E16"]
+    }
+  ],
+  "roles": [
+    {
+      "id": "product",
+      "name": "Product",
+      "domain": "product",
+      "brief_path": "roles/product.md",
+      "action_ids": ["A01", "A04", "A06", "A09"],
+      "gap_ids": ["AG03", "AG04"]
+    },
+    {
+      "id": "engineering",
+      "name": "Engineering",
+      "domain": "engineering",
+      "brief_path": "roles/engineering.md",
+      "action_ids": ["A05"],
+      "gap_ids": ["AG01", "AG02", "AG03"]
+    },
+    {
+      "id": "design",
+      "name": "Design",
+      "domain": "design",
+      "brief_path": "roles/design.md",
+      "action_ids": ["A03", "A04"],
+      "gap_ids": []
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing",
+      "domain": "marketing",
+      "brief_path": "roles/marketing.md",
+      "action_ids": ["A07"],
+      "gap_ids": ["AG03"]
+    },
+    {
+      "id": "sales",
+      "name": "Sales",
+      "domain": "sales",
+      "brief_path": "roles/sales.md",
+      "action_ids": ["A08"],
+      "gap_ids": ["AG04"]
+    }
+  ],
+  "understanding_checks": [
+    {
+      "id": "UC01",
+      "role_id": "product",
+      "statement": "I own the frozen scope, acceptance record, approved pilot wording, and support/feedback proposal by the stated dates; done means the shared pilot boundary and every acceptance field are explicit.",
+      "status": "pending"
+    },
+    {
+      "id": "UC02",
+      "role_id": "engineering",
+      "statement": "I own the tested invite-brief-review flow in staging by August 28; done means the supported-browser flow completes and automated core-flow tests pass, while pilot access remains dependent on security.",
+      "status": "pending"
+    },
+    {
+      "id": "UC03",
+      "role_id": "design",
+      "statement": "I own all core-flow states by August 24 and the joint review on August 26; done means every state meets the three design criteria or has a named issue owner and date.",
+      "status": "pending"
+    },
+    {
+      "id": "UC04",
+      "role_id": "marketing",
+      "statement": "I own the pilot onboarding email and one-page overview by August 29; done means links work, copy matches Product's approved scope, and Maya approves the wording.",
+      "status": "pending"
+    },
+    {
+      "id": "UC05",
+      "role_id": "sales",
+      "statement": "I own the five-customer list by August 22; done means each customer fits the workflow, has a contact, and agrees to weekly feedback, with no pricing or production-readiness promise.",
+      "status": "pending"
+    }
+  ],
+  "alignment_score": {
+    "total": 78,
+    "components": {
+      "decision_clarity": {"score": 19, "maximum": 20},
+      "ownership_clarity": {"score": 15, "maximum": 20},
+      "deadline_clarity": {"score": 13, "maximum": 15},
+      "definition_of_done_clarity": {"score": 16, "maximum": 20},
+      "dependency_clarity": {"score": 9, "maximum": 15},
+      "cross_role_clarity": {"score": 6, "maximum": 10}
+    },
+    "disclaimer": "This score describes clarity in this meeting record. It is not a scientific measure of people or organizational performance."
+  },
+  "review": {
+    "status": "reviewed",
+    "reviewer": "Synthetic demo editor",
+    "external_actions_authorized": false
+  },
+  "limitations": [
+    "The transcript and every participant are fictional.",
+    "Security, data retention, support escalation, and feedback ownership remain unresolved by design.",
+    "No customer contact, task-system update, or other external action is authorized.",
+    "The Alignment Score is explanatory and not a people or performance metric."
+  ]
+}

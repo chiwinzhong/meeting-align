@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/chiwinzhong/meeting-align/schemas/meeting-align.schema.json",
+  "title": "MeetingAlign Output",
+  "type": "object",
+  "required": ["schema_version", "meeting", "evidence", "decisions", "rejected_or_deferred", "open_questions", "actions", "alignment_gaps", "roles", "understanding_checks", "review", "limitations"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "meeting": {"type": "object"},
+    "evidence": {"type": "array", "minItems": 1},
+    "decisions": {"type": "array"},
+    "rejected_or_deferred": {"type": "array"},
+    "open_questions": {"type": "array"},
+    "actions": {"type": "array"},
+    "alignment_gaps": {"type": "array"},
+    "roles": {"type": "array", "minItems": 1},
+    "understanding_checks": {"type": "array", "minItems": 1},
+    "review": {"type": "object"},
+    "limitations": {"type": "array", "minItems": 1}
+  },
+  "additionalProperties": true
+}
