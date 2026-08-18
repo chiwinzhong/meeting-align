@@ -15,9 +15,9 @@ python3 tools/run_adversarial_contracts.py \
   tests/adversarial-contracts.json
 ```
 
-The package passes only when the recording quality gate is respected, decisions point to allowed evidence, rejected work stays out of actions, required action fields are visible, AI suggestions do not become decisions, and silence is not counted as alignment.
+The package passes only when the recording quality gate is respected, meeting type and outcome are explicit, decisions point to allowed evidence, maturity upgrades are traceable, rejected work stays out of actions, required action fields are visible, guardrails have support, score profiles fit the meeting type, AI suggestions do not become decisions, and silence is not counted as alignment.
 
-The T00–T10 suite is a set of synthetic golden-output contracts. It protects documented expectations and test-harness behavior; it is not a generative benchmark and does not prove that every model produces those outputs from raw text.
+The T00–T15 suite contains 16 synthetic golden-output contracts. T11–T15 cover strategy-not-kickoff classification, decision maturity, readiness mismatch, evidence-based role guardrails, and meeting-type-aware scoring. The suite protects documented expectations and test-harness behavior; it is not a generative benchmark and does not prove that every model produces those outputs from raw text.
 
 ## Level 2 — Human review against a transcript
 
@@ -34,6 +34,12 @@ Use two reviewers who did not generate the package. For each high-impact item, r
 | Cross-role consistency | Do all briefs preserve the same decision and scope? |
 | Unsupported-content rate | How many output claims lack transcript support? |
 | Ingestion coverage | Did a recording produce a complete, ordered, traceable transcript before interpretation? |
+| Meeting-type precision | Does the selected type match the meeting's actual purpose and output standard? |
+| Maturity precision | Does each statement remain at the highest level directly supported by evidence? |
+| Outcome-state accuracy | Does the stated outcome reflect what the meeting actually achieved? |
+| Strategic-question quality | Are the ranked questions necessary to move direction toward validation or execution? |
+| Guardrail precision | Is every role boundary supported by an exclusion, rejection, or direct execution implication? |
+| Readiness-mismatch recall | Did the output expose shared direction paired with conflicting readiness assumptions? |
 
 Reviewers should resolve disagreements and retain both the initial score and the adjudicated result.
 
@@ -41,9 +47,9 @@ Reviewers should resolve disagreements and retain both the initial score and the
 
 With consent, compare MeetingAlign-assisted meetings with a pre-agreed baseline. Useful operational measures include:
 
-- time from meeting end to reviewed action package;
+- time from meeting end to reviewed package appropriate for that meeting type;
 - percentage of role briefs corrected by recipients;
-- unresolved owner, deadline, or definition-of-done fields after confirmation;
+- unresolved maturity, owner, deadline, or definition-of-done fields after confirmation;
 - rework attributable to different interpretations;
 - time spent in follow-up clarification;
 - participant-reported confidence that scope and acceptance criteria are shared.

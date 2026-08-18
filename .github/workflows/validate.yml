@@ -21,7 +21,7 @@ jobs:
         run: python3 skills/meeting-align/scripts/validate_meeting_align.py examples/launch-meeting/meeting-align.json
       - name: Run contract tests
         run: python3 skills/meeting-align/scripts/run_contract_tests.py examples/launch-meeting/meeting-align.json
-      - name: Run T00-T10 adversarial contracts
+      - name: Run T00-T15 adversarial contracts
         run: python3 tools/run_adversarial_contracts.py tests/adversarial-contracts.json
       - name: Check Python and JSON syntax
         run: |

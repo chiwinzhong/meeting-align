@@ -27,6 +27,10 @@ Five customer records contain the confirmed selection fields and none carries an
 
 Lena for pilot scope and feedback format, Mia for approved customer materials, Omar for demo/staging availability, and Maya for promise boundaries.
 
+## Don't / Guardrail
+
+Do not promise pricing, public launch, or production readiness to pilot customers. (`E05`)
+
 ## Alignment gap for this role
 
 Weekly feedback is required, but collection and synthesis ownership are not yet defined.

@@ -28,6 +28,10 @@ Invite, brief, and review complete on the supported browser and automated core-f
 
 Lena for frozen scope, Priya for design handoff, Maya and Operations for security ownership, and the future security owner for data-retention requirements.
 
+## Don't / Guardrail
+
+Do not present a successful staging build as security approval or production readiness. (`E01`, `E06`)
+
 ## Alignment gap for this role
 
 Security ownership and data-retention requirements are unresolved.

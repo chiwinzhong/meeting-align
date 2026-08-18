@@ -1,6 +1,6 @@
 ---
 name: meeting-align
-description: Turn a complete meeting recording, transcript, or detailed meeting record into one traceable Meeting Truth, a host control view, role-specific action briefs, visible alignment gaps, and lightweight understanding checks. Use when a team needs to distinguish decisions from discussion, safely transcribe raw audio or video before interpretation, translate one shared decision for product, engineering, design, marketing, sales, operations, or other roles, expose vague deadlines and definitions of done, document dependencies, or prevent everyone from leaving the same meeting with different meanings. Do not use it to invent transcription coverage, speaker identity, decisions, owners, deadlines, acceptance criteria, authority, or employee-performance judgments, and do not send briefs or update project systems without explicit authorization.
+description: Turn a complete meeting recording, transcript, or detailed record into a traceable, meeting-type-aware Meeting Truth, decision-maturity map, Host View, role briefs and guardrails, strategic open questions, alignment gaps, and understanding checks. Use when a team needs to safely transcribe audio or video before interpretation; distinguish ideas, hypotheses, directional consensus, confirmed decisions, and committed actions; adapt output standards for strategy, decision, kickoff, execution, review, sales, discovery, or brainstorming meetings; expose maturity or readiness mismatches; or translate shared truth across roles without forcing every meeting into an action list. Do not use it to invent transcript coverage, speaker identity, decision maturity, owners, deadlines, acceptance criteria, authority, guardrails, or performance judgments, and do not send briefs or update systems without explicit authorization.
 ---
 
 # MeetingAlign
@@ -12,13 +12,14 @@ Do not merely summarize the meeting. Align the people around one shared, traceab
 Produce a governed package containing:
 
 1. a traceable `transcript.md` when the source is a recording;
-2. one canonical `meeting-truth.md`;
-3. one `host-view.md` focused on execution control;
-4. one `alignment-gaps.md` showing only material ambiguity;
-5. one brief for each key execution role;
-6. lightweight understanding checks;
-7. source pointers for major decisions and gaps;
-8. optional `meeting-align.json` for validation and downstream handoff.
+2. one `meeting-type.md` describing type, confidence, expected output standard, and outcome state;
+3. one canonical `meeting-truth.md` separating maturity levels;
+4. one `host-view.md` focused on the control needs of that meeting type;
+5. one `alignment-gaps.md` showing only material ambiguity or maturity/readiness mismatch;
+6. one brief and evidence-based guardrail set for each key role;
+7. lightweight understanding checks;
+8. source pointers for major decisions, maturity upgrades, guardrails, and gaps;
+9. optional `meeting-align.json` for validation and downstream handoff.
 
 All derivatives must use the same Meeting Truth. Never create a different underlying decision for a different role.
 
@@ -29,6 +30,8 @@ All derivatives must use the same Meeting Truth. Never create a different underl
 - Treat implied consensus as an inference until the transcript clearly confirms it.
 - Do not convert `ASAP`, `ready`, `premium`, `better`, `run it through`, or `close the loop` into invented precision.
 - Do not assign a new owner, deadline, scope, or acceptance criterion because it seems reasonable.
+- Do not force a strategy or discovery meeting into a kickoff-style action list.
+- Do not promote an idea, hypothesis, or directional consensus into a confirmed decision or committed action.
 - Keep rejected and deferred options out of action lists.
 - Preserve missing owners, deadlines, definitions of done, and dependencies as visible gaps.
 - Do not infer intelligence, competence, attitude, or employee performance.
@@ -69,7 +72,15 @@ Enter semantic analysis only when transcript coverage is sufficient to support m
 
 Then stop. Do not infer Meeting Truth, actions, owners, or gaps from metadata, isolated samples, or a partial audio summary.
 
-## Step 3 — Reconstruct before summarizing
+## Step 3 — Detect meeting type before extracting actions
+
+Read [references/meeting-type-and-outcome.md](references/meeting-type-and-outcome.md).
+
+Identify one primary meeting type, optional secondary types, confidence, a one-sentence evidence-based rationale, and the expected output standard. Note mode transitions when a meeting moves from exploration into decision or execution.
+
+Treat the type as an interpretation aid, not a rigid label. A strategy meeting may succeed with direction and explicit open questions; a kickoff requires substantially clearer owners, timing, acceptance, and handoffs.
+
+## Step 4 — Reconstruct before summarizing
 
 Read the complete transcript. Identify:
 
@@ -81,28 +92,51 @@ Read the complete transcript. Identify:
 6. actions, owners, deadlines, definitions of done, and dependencies;
 7. shared success criteria and governing execution principles;
 8. statements that remain suggestions, hypotheses, or inferences.
+9. broad directions or boundaries that participants share but have not operationalized;
+10. whether participants share direction but differ on readiness to act.
 
 Read [references/evidence-and-decision-model.md](references/evidence-and-decision-model.md) and apply its classification rules. Preserve a short speaker/timestamp or section pointer for every high-impact decision and gap.
 
-## Step 4 — Build one Meeting Truth
+## Step 5 — Classify decision maturity and outcome state
+
+Read [references/decision-maturity.md](references/decision-maturity.md).
+
+Assign the highest evidence-supported maturity to each important statement:
+
+- `IDEA`
+- `HYPOTHESIS`
+- `DIRECTIONAL_CONSENSUS`
+- `CONFIRMED_DECISION`
+- `COMMITTED_ACTION`
+
+Use the latest supported state while preserving the earlier path in source pointers. Then select one outcome state: `EXPLORING`, `DIRECTION_SET`, `EXECUTION_READY`, `IN_EXECUTION`, or `REVIEWING`.
+
+Do not treat politeness, silence, enthusiasm, or repeated discussion as a maturity upgrade.
+
+## Step 6 — Build one Meeting Truth
 
 Create the canonical fact base before writing role briefs.
 
 Include:
 
+- meeting type, confidence, expected output standard, and outcome state;
 - meeting purpose;
+- ideas and hypotheses that materially shaped the meeting;
+- directional consensus and strategic boundaries;
 - confirmed decisions;
+- committed actions;
 - confirmed facts;
 - explicitly rejected or deferred options;
 - open questions;
 - actions with owner, deadline, definition of done, dependency, evidence pointer, and confidence;
 - shared definition of success;
 - main execution principle;
+- ranked strategic open questions when they block movement toward execution;
 - package limitations and review status.
 
 Mark missing fields `not yet defined`. If two speakers conflict, preserve both positions and classify the item as open unless a later statement clearly resolves it.
 
-## Step 5 — Identify key roles
+## Step 7 — Identify key roles
 
 Classify relevant participants by meeting function:
 
@@ -118,7 +152,7 @@ Infer a professional domain only when the transcript supports it. Read [referenc
 
 If a critical owner cannot be inferred, expose the missing-owner gap. Do not ask the user to label every participant by default.
 
-## Step 6 — Detect material alignment gaps
+## Step 8 — Detect material alignment gaps
 
 Read [references/alignment-gaps-and-score.md](references/alignment-gaps-and-score.md).
 
@@ -134,6 +168,8 @@ Check for:
 - affected but unrepresented role;
 - authority ambiguity;
 - decision or scope drift inside the meeting.
+- maturity mismatch, when participants assign different commitment levels to the same direction;
+- readiness mismatch, when direction is shared but readiness to build, launch, sell, or operationalize differs.
 
 For each material gap record:
 
@@ -147,26 +183,28 @@ For each material gap record:
 
 Do not flag harmless conversational ambiguity. Prioritize the smallest set of gaps capable of changing execution.
 
-## Step 7 — Generate the Host View
+## Step 9 — Generate the Host View
 
 Create a compact control surface, not another narrative summary.
 
 Include:
 
-1. what was decided;
-2. what was explicitly not decided;
-3. who owns what;
-4. definitions of done;
-5. dependencies and handoffs;
-6. open questions;
-7. high-risk alignment gaps;
-8. missing owners or deadlines;
+1. meeting type and outcome state;
+2. what direction is already aligned;
+3. decision-maturity map for the most important items;
+4. what was decided and explicitly not decided;
+5. who owns what;
+6. definitions of done, dependencies, and handoffs when execution requires them;
+7. ranked open questions and the next validation step;
+8. high-risk alignment gaps, including maturity or readiness mismatch;
 9. understanding-confirmation status, when collected;
-10. optional explanatory Alignment Score.
+10. optional meeting-type-aware Alignment Score and separate Execution Readiness.
 
 Lead with the few issues most likely to break execution.
 
-## Step 8 — Generate role briefs
+For strategy or co-creation, read [references/strategic-open-questions.md](references/strategic-open-questions.md) and lead with direction, boundaries, hypotheses, blocking questions, and next validation. Do not penalize missing deadlines that are not yet appropriate.
+
+## Step 10 — Generate role briefs
 
 For each key execution role, answer exactly these six questions:
 
@@ -179,8 +217,15 @@ For each key execution role, answer exactly these six questions:
 
 Then add:
 
+- **Don't / Guardrail** — one or two evidence-based boundaries when supported;
 - **Alignment gap for this role** — the most relevant unresolved ambiguity;
-- **Understanding check** — `My understanding: I own X, by Y, and done means Z.`
+- **Understanding check** — adapt it to the meeting type.
+
+Read [references/role-guardrails.md](references/role-guardrails.md) before adding a guardrail. Never invent a prohibition as generic management advice.
+
+For execution-ready work use: `My understanding: I own X, by Y, and done means Z.`
+
+For strategic work use: `My understanding: we are aligned on X; my role is Y; before execution, Z still needs to be decided or validated.`
 
 If X, Y, or Z is missing, write `not yet defined`. Offer only:
 
@@ -189,16 +234,19 @@ If X, Y, or Z is missing, write `not yet defined`. Offer only:
 
 Translate shared decisions into role implications without rewriting the facts or inventing a strategy.
 
-## Step 9 — Use the Alignment Score carefully
+## Step 11 — Use meeting-type-aware scores carefully
 
 The score is optional. Use it only when the user or host wants a compact diagnostic.
 
-- Score decision, ownership, deadline, definition-of-done, dependency, and cross-role clarity.
+- Select the scoring profile before assigning weights.
+- For strategy, emphasize direction, boundaries, maturity visibility, open questions, role complementarity, and next validation.
+- For kickoff or execution, emphasize decisions, owners, deadlines, definitions of done, blockers, dependencies, and handoffs.
+- When useful, show Alignment Score and Execution Readiness as separate indicators.
 - Explain every deduction and list the gaps that would improve the score.
 - Do not present it as a scientific measure of people, culture, intelligence, competence, or organizational performance.
 - Never use it for employee ranking, compensation, discipline, or surveillance.
 
-## Step 10 — Validate the package
+## Step 12 — Validate the package
 
 Use the human-readable structure in [references/output-contract.md](references/output-contract.md). When structured output is requested, conform to [references/meeting-align.schema.json](references/meeting-align.schema.json).
 
@@ -210,7 +258,7 @@ python3 scripts/validate_meeting_align.py path/to/meeting-align.json
 
 Fix every contract failure before presenting a package as reviewed or ready for downstream use.
 
-## Step 11 — Stop at the external-action gate
+## Step 13 — Stop at the external-action gate
 
 MeetingAlign may prepare files and understanding checks. It may not:
 
@@ -229,6 +277,9 @@ Before delivery, verify:
 
 - raw recordings passed the ingestion quality gate before semantic analysis;
 - the transcript preserves source order, uncertainty, and neutral speaker labeling where identity is unverified;
+- meeting type and expected output standard are set before action extraction;
+- decision maturity and outcome state are not overstated;
+- directional consensus is visibly separate from confirmed decisions and committed actions;
 - every role brief derives from the same Meeting Truth;
 - every major decision has a source pointer;
 - discussion, proposals, decisions, and actions remain distinct;
@@ -236,6 +287,9 @@ Before delivery, verify:
 - open questions remain open;
 - missing owners, deadlines, definitions of done, and dependencies are visible;
 - no gap has been silently repaired with invented precision;
+- strategic open questions remain open and ranked by blocking power;
+- role guardrails trace to exclusions, rejections, boundaries, or necessary execution implications;
+- strategy meetings are not penalized merely for lacking kickoff-level deadlines;
 - role briefs remain readable in under three minutes;
 - understanding confirmation requires one click or one short response;
 - sensitive content is limited to the authorized package;

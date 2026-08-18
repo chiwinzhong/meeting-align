@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "ingestion": {
     "input_type": "transcript",
     "status": "not_required",
@@ -10,6 +10,14 @@
     "adapter": "not required",
     "limitations": []
   },
+  "meeting_semantics": {
+    "primary_type": "PROJECT_KICKOFF",
+    "secondary_types": [],
+    "confidence": "medium",
+    "rationale": "Replace with an evidence-based classification rationale.",
+    "expected_output_standard": "Replace with the output standard appropriate to the meeting type.",
+    "outcome_state": "EXPLORING"
+  },
   "meeting": {
     "id": "MEETING_ID",
     "title": "",
@@ -18,9 +26,12 @@
     "source_status": "complete"
   },
   "evidence": [],
+  "decision_maturity": [],
+  "directional_consensus": [],
   "decisions": [],
   "rejected_or_deferred": [],
   "open_questions": [],
+  "strategic_open_questions": [],
   "actions": [],
   "alignment_gaps": [],
   "roles": [],

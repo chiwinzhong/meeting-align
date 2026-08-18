@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "ingestion": {
     "input_type": "transcript",
     "status": "not_required",
@@ -9,6 +9,14 @@
     "timestamps": "full",
     "adapter": "not required — synthetic transcript supplied",
     "limitations": ["The transcript and all participants are synthetic."]
+  },
+  "meeting_semantics": {
+    "primary_type": "PROJECT_KICKOFF",
+    "secondary_types": ["DECISION_MEETING"],
+    "confidence": "high",
+    "rationale": "The meeting converts an approved private-pilot direction into scope, owners, milestones, acceptance criteria, dependencies, and blockers while settling several remaining choices.",
+    "expected_output_standard": "Execution-ready scope, owners, dates, definitions of done, dependencies, blockers, and confirmation checks.",
+    "outcome_state": "IN_EXECUTION"
   },
   "meeting": {
     "id": "DEMO-2026-001",
@@ -145,6 +153,73 @@
       "confidence": "high"
     }
   ],
+  "decision_maturity": [
+    {
+      "id": "M01",
+      "statement": "August 31 means private-pilot readiness for five selected customers, not public launch.",
+      "level": "CONFIRMED_DECISION",
+      "evidence_ids": ["E01"],
+      "linked_decision_id": "D01",
+      "linked_action_id": null
+    },
+    {
+      "id": "M02",
+      "statement": "Pilot scope is invite, brief, and review; analytics and SSO are deferred.",
+      "level": "CONFIRMED_DECISION",
+      "evidence_ids": ["E02"],
+      "linked_decision_id": "D02",
+      "linked_action_id": null
+    },
+    {
+      "id": "M03",
+      "statement": "Design acceptance uses three observable quality criteria and includes non-happy-path states.",
+      "level": "CONFIRMED_DECISION",
+      "evidence_ids": ["E03"],
+      "linked_decision_id": "D03",
+      "linked_action_id": null
+    },
+    {
+      "id": "M04",
+      "statement": "Marketing prepares only private-pilot materials, with no public campaign.",
+      "level": "CONFIRMED_DECISION",
+      "evidence_ids": ["E04"],
+      "linked_decision_id": "D04",
+      "linked_action_id": null
+    },
+    {
+      "id": "M05",
+      "statement": "Sales selects five suitable customers without pricing or production-readiness promises.",
+      "level": "CONFIRMED_DECISION",
+      "evidence_ids": ["E05"],
+      "linked_decision_id": "D05",
+      "linked_action_id": null
+    },
+    {
+      "id": "M06",
+      "statement": "Product will publish frozen scope and acceptance criteria by August 20.",
+      "level": "COMMITTED_ACTION",
+      "evidence_ids": ["E11"],
+      "linked_decision_id": null,
+      "linked_action_id": "A01"
+    },
+    {
+      "id": "M07",
+      "statement": "Maya will obtain a security-review owner, scope, and date by 6 p.m.",
+      "level": "COMMITTED_ACTION",
+      "evidence_ids": ["E10"],
+      "linked_decision_id": null,
+      "linked_action_id": "A02"
+    },
+    {
+      "id": "M08",
+      "statement": "Product will propose the support and feedback operating model at the August 26 review.",
+      "level": "COMMITTED_ACTION",
+      "evidence_ids": ["E16"],
+      "linked_decision_id": null,
+      "linked_action_id": "A09"
+    }
+  ],
+  "directional_consensus": [],
   "decisions": [
     {
       "id": "D01",
@@ -201,6 +276,7 @@
       "evidence_ids": ["E09"]
     }
   ],
+  "strategic_open_questions": [],
   "actions": [
     {
       "id": "A01",
@@ -333,7 +409,10 @@
       "domain": "product",
       "brief_path": "roles/product.md",
       "action_ids": ["A01", "A04", "A06", "A09"],
-      "gap_ids": ["AG03", "AG04"]
+      "gap_ids": ["AG03", "AG04"],
+      "guardrails": [
+        {"statement": "Do not expand the milestone beyond invite, brief, and review or relabel it as public launch.", "basis": "EXPLICIT_EXCLUSION", "evidence_ids": ["E01", "E02"]}
+      ]
     },
     {
       "id": "engineering",
@@ -341,7 +420,10 @@
       "domain": "engineering",
       "brief_path": "roles/engineering.md",
       "action_ids": ["A05"],
-      "gap_ids": ["AG01", "AG02", "AG03"]
+      "gap_ids": ["AG01", "AG02", "AG03"],
+      "guardrails": [
+        {"statement": "Do not present a successful staging build as security approval or production readiness.", "basis": "EXECUTION_IMPLICATION", "evidence_ids": ["E01", "E06"]}
+      ]
     },
     {
       "id": "design",
@@ -349,7 +431,10 @@
       "domain": "design",
       "brief_path": "roles/design.md",
       "action_ids": ["A03", "A04"],
-      "gap_ids": []
+      "gap_ids": [],
+      "guardrails": [
+        {"statement": "Do not treat a polished happy path as complete design acceptance while empty, loading, or error states remain unfinished.", "basis": "EXPLICIT_EXCLUSION", "evidence_ids": ["E03"]}
+      ]
     },
     {
       "id": "marketing",
@@ -357,7 +442,10 @@
       "domain": "marketing",
       "brief_path": "roles/marketing.md",
       "action_ids": ["A07"],
-      "gap_ids": ["AG03"]
+      "gap_ids": ["AG03"],
+      "guardrails": [
+        {"statement": "Do not create a public campaign, broad announcement, pricing claim, or production-readiness claim.", "basis": "EXPLICIT_EXCLUSION", "evidence_ids": ["E04"]}
+      ]
     },
     {
       "id": "sales",
@@ -365,7 +453,10 @@
       "domain": "sales",
       "brief_path": "roles/sales.md",
       "action_ids": ["A08"],
-      "gap_ids": ["AG04"]
+      "gap_ids": ["AG04"],
+      "guardrails": [
+        {"statement": "Do not promise pricing, public launch, or production readiness to pilot customers.", "basis": "REJECTED_OPTION", "evidence_ids": ["E05"]}
+      ]
     }
   ],
   "understanding_checks": [
@@ -401,6 +492,7 @@
     }
   ],
   "alignment_score": {
+    "profile": "kickoff_execution",
     "total": 78,
     "components": {
       "decision_clarity": {"score": 19, "maximum": 20},
@@ -410,7 +502,18 @@
       "dependency_clarity": {"score": 9, "maximum": 15},
       "cross_role_clarity": {"score": 6, "maximum": 10}
     },
-    "disclaimer": "This score describes clarity in this meeting record. It is not a scientific measure of people or organizational performance."
+    "disclaimer": "This score describes clarity in this meeting record. It is not a scientific measure of people or organizational performance.",
+    "execution_readiness": {
+      "total": 68,
+      "components": {
+        "core_scope_and_acceptance": {"score": 25, "maximum": 25},
+        "security_gate": {"score": 8, "maximum": 25},
+        "support_model": {"score": 12, "maximum": 20},
+        "feedback_loop": {"score": 8, "maximum": 15},
+        "role_handoffs": {"score": 15, "maximum": 15}
+      },
+      "disclaimer": "Execution Readiness reflects unresolved gates in this synthetic kickoff record, not team capability or predicted business performance."
+    }
   },
   "review": {
     "status": "reviewed",

@@ -1,6 +1,6 @@
 {
   "suite_version": "1.0",
-  "description": "Synthetic golden contracts for MeetingAlign T00-T10. These fixtures test expected rule behavior, not model quality.",
+  "description": "Synthetic golden contracts for MeetingAlign T00-T15. These fixtures test expected rule behavior, not model quality.",
   "cases": [
     {
       "id": "T00",
@@ -110,6 +110,76 @@
         ]
       },
       "expectations": {"roles_present": ["Product", "Engineering", "Sales"], "shared_decision_id": "D1"}
+    },
+    {
+      "id": "T11",
+      "name": "Strategy meeting is not forced into kickoff output",
+      "source": "The team explores positioning, business model, boundaries, and possible offers. It aligns on an asset-light direction but sets no execution dates.",
+      "result": {
+        "meeting_semantics": {"primary_type": "STRATEGY_CO_CREATION", "outcome_state": "DIRECTION_SET"},
+        "directional_consensus": ["Build an asset-light platform before creating owned delivery capacity."],
+        "strategic_open_questions": [
+          {"question": "Which customer segment and paid offer should be validated first?", "next_validation": "Compare two candidate segments with evidence."}
+        ],
+        "actions": [],
+        "alignment_score": {"profile": "strategy_co_creation", "total": 76}
+      },
+      "expectations": {"meeting_type": "STRATEGY_CO_CREATION", "outcome_state": "DIRECTION_SET", "action_count": 0, "strategic_open_questions_min": 1, "score_profile": "strategy_co_creation"}
+    },
+    {
+      "id": "T12",
+      "name": "Decision maturity is not flattened",
+      "source": "A: Maybe we could build a community. B: An asset-light platform is a better direction. A: Yes, let's stay asset-light. B: I'll shortlist three delivery partners by Friday.",
+      "result": {
+        "decision_maturity": [
+          {"statement": "Build a community.", "level": "IDEA"},
+          {"statement": "Stay asset-light.", "level": "DIRECTIONAL_CONSENSUS"},
+          {"statement": "Shortlist three delivery partners by Friday.", "level": "COMMITTED_ACTION"}
+        ],
+        "actions": [{"action": "Shortlist three delivery partners.", "owner": "B", "deadline": "Friday"}]
+      },
+      "expectations": {
+        "required_maturity": [
+          {"contains": "build a community", "level": "IDEA"},
+          {"contains": "stay asset-light", "level": "DIRECTIONAL_CONSENSUS"},
+          {"contains": "shortlist three delivery partners", "level": "COMMITTED_ACTION"}
+        ]
+      }
+    },
+    {
+      "id": "T13",
+      "name": "Same direction, different readiness",
+      "source": "Marketing: The direction is clear; I'll launch the brand. Expert: The direction is clear, but partner standards must be decided before public promotion.",
+      "result": {
+        "directional_consensus": ["The shared direction is clear."],
+        "alignment_gaps": [
+          {"type": "READINESS_MISMATCH", "phrase": "Marketing is ready to promote while the expert requires partner standards first."}
+        ]
+      },
+      "expectations": {"required_gap_types": ["READINESS_MISMATCH"], "must_not_contain": ["strategic disagreement"]}
+    },
+    {
+      "id": "T14",
+      "name": "Role guardrail must be evidence-based",
+      "source": "Team: Phase one must stay asset-light. We will outsource delivery.",
+      "result": {
+        "roles": [
+          {"role": "Operations", "guardrails": [{"statement": "Do not build a permanent delivery team in phase one.", "basis": "STRATEGIC_BOUNDARY"}]}
+        ]
+      },
+      "expectations": {"guardrails_must_contain": ["do not build a permanent delivery team"], "guardrails_must_not_contain": ["do not use junior employees"]}
+    },
+    {
+      "id": "T15",
+      "name": "Alignment score is meeting-type-aware",
+      "source": "Compare an early strategy meeting and a final kickoff with the same missing deadlines.",
+      "result": {
+        "comparisons": [
+          {"meeting_type": "STRATEGY_CO_CREATION", "profile": "strategy_co_creation", "missing_deadline_penalty": 2},
+          {"meeting_type": "PROJECT_KICKOFF", "profile": "kickoff_execution", "missing_deadline_penalty": 15}
+        ]
+      },
+      "expectations": {"kickoff_penalty_stronger_than_strategy": true, "comparison_profiles": ["strategy_co_creation", "kickoff_execution"]}
     }
   ]
 }

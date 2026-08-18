@@ -27,6 +27,10 @@ Scope lists each user action, expected system response, and sign-off owner; copy
 
 Priya for design states, Omar for Engineering escalation input, Eli for customer-feedback needs, Maya for final wording and unresolved authority.
 
+## Don't / Guardrail
+
+Do not expand the milestone beyond invite → brief → review or relabel it as a public launch. (`E01`, `E02`)
+
 ## Alignment gap for this role
 
 Support and feedback ownership are not yet defined.

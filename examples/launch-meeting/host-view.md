@@ -2,6 +2,12 @@
 
 > Control view · reviewed synthetic demo · no external actions authorized
 
+## Meeting control state
+
+- Type: `PROJECT_KICKOFF` with `DECISION_MEETING` as a secondary mode
+- Outcome: `IN_EXECUTION`
+- Required standard: owners, timing, definitions of done, dependencies, blockers, and explicit confirmation
+
 ## The one decision everyone must share
 
 **August 31 = five-customer private-pilot readiness in a controlled environment. It does not mean public launch or production readiness.**
@@ -29,6 +35,14 @@
 - support response time;
 - Engineering escalation path;
 - customer-feedback synthesis owner and format.
+
+## Decision maturity
+
+- Five-customer private-pilot boundary: `CONFIRMED_DECISION`
+- Invite → brief → review scope: `CONFIRMED_DECISION`
+- Frozen-scope publication: `COMMITTED_ACTION`
+- Security-owner follow-up: `COMMITTED_ACTION`
+- Support and feedback operating model: only the proposal is a `COMMITTED_ACTION`; the model itself is not yet decided
 
 ## Owners and milestones
 
@@ -70,3 +84,9 @@ All five role checks are `pending`. Silence must not be treated as alignment.
 | Cross-role clarity | 6/10 | Role language is aligned, but four gaps can still split execution |
 
 This score describes clarity in this meeting record. It is not a scientific measure of people or organizational performance.
+
+## Separate Execution Readiness
+
+**68 / 100**
+
+The core scope and role handoffs are defined, but security, support, and feedback-loop gates remain unresolved. This indicator is separate from Alignment Score and does not predict team or business performance.

@@ -1,6 +1,6 @@
 # Adversarial contracts
 
-`adversarial-contracts.json` contains eleven synthetic golden cases covering the audio gate, decision classification, rejected work, role translation, ambiguity resolution, ownership, dependencies, cognitive labeling, confirmation, and shared-decision consistency.
+`adversarial-contracts.json` contains sixteen synthetic golden cases covering the audio gate, decision classification, rejected work, role translation, ambiguity resolution, ownership, dependencies, cognitive labeling, confirmation, shared-decision consistency, meeting type, decision maturity, readiness mismatch, role guardrails, and meeting-type-aware scoring.
 
 Run:
 

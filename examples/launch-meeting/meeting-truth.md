@@ -2,6 +2,13 @@
 
 > Status: reviewed synthetic demo · External action: not authorized
 
+## Meeting semantics
+
+- Primary type: `PROJECT_KICKOFF`
+- Secondary type: `DECISION_MEETING`
+- Outcome state: `IN_EXECUTION`
+- Expected standard: execution-ready scope, owners, dates, definitions of done, dependencies, blockers, and confirmation checks
+
 ## Meeting purpose
 
 Define what “ready by month-end” means and align Product, Engineering, Design, Marketing, and Sales around one private-pilot milestone.
@@ -14,6 +21,18 @@ Define what “ready by month-end” means and align Product, Engineering, Desig
 4. Design acceptance requires clear hierarchy, restrained color and motion, and designed empty, loading, and error states. (`Priya · 03:54`; `Maya · 04:28`)
 5. Marketing will prepare only a pilot onboarding email and one-page overview. No public campaign, press release, paid media, or broad announcement. (`Maya · 05:55`)
 6. Sales will select existing customers with a relevant workflow who agree to weekly feedback. No pricing or production-readiness promise. (`Maya · 07:15`, `08:07`)
+
+## Decision-maturity map
+
+| Statement | Highest supported maturity | Evidence |
+| --- | --- | --- |
+| August 31 is a five-customer private pilot, not a public launch | `CONFIRMED_DECISION` | `E01` |
+| Scope is invite → brief → review | `CONFIRMED_DECISION` | `E02` |
+| Product publishes frozen scope by August 20 | `COMMITTED_ACTION` | `E11` |
+| Maya names the security-review owner, scope, and date by 18:00 | `COMMITTED_ACTION` | `E10` |
+| Product brings a support and feedback operating proposal to the August 26 review | `COMMITTED_ACTION` | `E16` |
+
+These labels describe what the transcript supports. Enthusiasm, repetition, or silence would not promote an item to a higher level.
 
 ## Confirmed facts
 

@@ -26,6 +26,10 @@ Happy, empty, loading, and error states meet all three confirmed criteria or hav
 
 Lena for frozen scope and acceptance recording; Omar for implementation constraints and handoff questions.
 
+## Don't / Guardrail
+
+Do not treat a polished happy path as complete design acceptance while empty, loading, or error states remain unfinished. (`E03`)
+
 ## Alignment gap for this role
 
 No material design-specific gap remains; implementation feasibility should be confirmed during handoff.

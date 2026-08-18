@@ -42,6 +42,22 @@ def evaluate(case: dict) -> None:
     if "decision_count" in expected and len(result.get("decisions", [])) != expected["decision_count"]:
         fail(case_id, "decision count differs from contract")
 
+    if "action_count" in expected and len(result.get("actions", [])) != expected["action_count"]:
+        fail(case_id, "action count differs from contract")
+
+    if "meeting_type" in expected and result.get("meeting_semantics", {}).get("primary_type") != expected["meeting_type"]:
+        fail(case_id, "meeting type differs from contract")
+
+    if "outcome_state" in expected and result.get("meeting_semantics", {}).get("outcome_state") != expected["outcome_state"]:
+        fail(case_id, "outcome state differs from contract")
+
+    minimum_questions = expected.get("strategic_open_questions_min")
+    if minimum_questions is not None and len(result.get("strategic_open_questions", [])) < minimum_questions:
+        fail(case_id, "too few strategic open questions")
+
+    if "score_profile" in expected and result.get("alignment_score", {}).get("profile") != expected["score_profile"]:
+        fail(case_id, "alignment score profile differs from contract")
+
     for phrase in expected.get("must_contain", []):
         if phrase.casefold() not in all_text:
             fail(case_id, f"missing required phrase: {phrase}")
@@ -98,6 +114,36 @@ def evaluate(case: dict) -> None:
         if not actual_statuses or not actual_statuses <= allowed_statuses:
             fail(case_id, f"unexpected understanding-check statuses: {sorted(actual_statuses)}")
 
+    for rule in expected.get("required_maturity", []):
+        matches = [item for item in result.get("decision_maturity", []) if rule["contains"].casefold() in item.get("statement", "").casefold()]
+        if len(matches) != 1 or matches[0].get("level") != rule["level"]:
+            fail(case_id, f"maturity contract failed for: {rule['contains']}")
+
+    guardrails_text = text([
+        guardrail
+        for role in result.get("roles", [])
+        for guardrail in role.get("guardrails", [])
+    ])
+    for phrase in expected.get("guardrails_must_contain", []):
+        if phrase.casefold() not in guardrails_text:
+            fail(case_id, f"missing guardrail: {phrase}")
+    for phrase in expected.get("guardrails_must_not_contain", []):
+        if phrase.casefold() in guardrails_text:
+            fail(case_id, f"unsupported guardrail found: {phrase}")
+
+    comparisons = result.get("comparisons", [])
+    required_profiles = set(expected.get("comparison_profiles", []))
+    if required_profiles:
+        actual_profiles = {item.get("profile") for item in comparisons}
+        if not required_profiles <= actual_profiles:
+            fail(case_id, f"missing comparison profiles: {sorted(required_profiles - actual_profiles)}")
+    if expected.get("kickoff_penalty_stronger_than_strategy"):
+        by_type = {item.get("meeting_type"): item for item in comparisons}
+        strategy_penalty = by_type.get("STRATEGY_CO_CREATION", {}).get("missing_deadline_penalty")
+        kickoff_penalty = by_type.get("PROJECT_KICKOFF", {}).get("missing_deadline_penalty")
+        if not isinstance(strategy_penalty, (int, float)) or not isinstance(kickoff_penalty, (int, float)) or kickoff_penalty <= strategy_penalty:
+            fail(case_id, "kickoff deadline penalty is not stronger than strategy penalty")
+
     print(f"PASS: {case_id} — {case['name']}")
 
 
@@ -109,7 +155,7 @@ def main() -> int:
     suite = json.loads(path.read_text(encoding="utf-8"))
     cases = suite.get("cases", [])
     ids = [case.get("id") for case in cases]
-    expected_ids = [f"T{number:02d}" for number in range(11)]
+    expected_ids = [f"T{number:02d}" for number in range(16)]
     if ids != expected_ids:
         fail("SUITE", f"case IDs must be exactly {expected_ids}")
     for case in cases:

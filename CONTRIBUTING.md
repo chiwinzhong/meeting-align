@@ -1,12 +1,15 @@
 # Contributing
 
-MeetingAlign welcomes issues and pull requests that improve decision traceability, role translation, gap detection, multilingual behavior, privacy, and evaluation.
+MeetingAlign welcomes issues and pull requests that improve meeting-type detection, decision-maturity traceability, role translation, evidence-based guardrails, gap detection, multilingual behavior, privacy, and evaluation.
 
 ## Useful contributions
 
 - synthetic or fully authorized difficult transcripts;
 - false-positive or missed alignment gaps;
 - cases where proposals were mistaken for decisions;
+- strategy or discovery meetings incorrectly forced into kickoff outputs;
+- maturity or readiness mismatches;
+- role guardrails that are unsupported, missing, or too broad;
 - role-translation edge cases;
 - multilingual meeting examples;
 - validator and schema improvements;
@@ -26,4 +29,4 @@ python3 tools/run_adversarial_contracts.py \
   tests/adversarial-contracts.json
 ```
 
-Pull requests should explain what changed, why the change improves alignment rather than output volume, which failure case it addresses, and how it was tested.
+Pull requests should explain what changed, why the change improves alignment rather than output volume, which failure case it addresses, and how it was tested. Meeting-semantics changes should add or update a synthetic contract covering type, maturity, outcome state, strategic questions, guardrails, or score profile as appropriate.

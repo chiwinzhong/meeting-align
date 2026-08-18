@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | `CONFIRMED_DECISION` | The meeting clearly commits to a choice, scope, priority, owner, or action | May enter Meeting Truth as a decision |
 | `CONFIRMED_FACT` | The meeting treats the statement as true and no conflict is visible | Record as a meeting fact, not necessarily external truth |
+| `PROPOSAL` | An idea, hypothesis, or proposed option that is not yet a confirmed choice | Preserve with decision maturity; do not turn into an assignment |
 | `REJECTED_OPTION` | A proposed option is explicitly declined | Preserve under rejected/deferred; never turn into an action |
 | `DEFERRED_OPTION` | A choice is postponed | Preserve with the next decision point when known |
 | `OPEN_QUESTION` | The meeting leaves the matter unresolved | Keep open; do not complete it with AI judgment |
@@ -50,3 +51,5 @@ Use the shortest useful pointer:
 - `Transcript section / paragraph`.
 
 Every major decision, rejected option, action, and high-risk gap needs a pointer. Routine context may be summarized without citation when it cannot change execution.
+
+Evidence class and decision maturity are separate. For example, a `PROPOSAL` may mature from `IDEA` to `DIRECTIONAL_CONSENSUS`; it does not become a `CONFIRMED_DECISION` until the decision test passes. Read [decision-maturity.md](decision-maturity.md).

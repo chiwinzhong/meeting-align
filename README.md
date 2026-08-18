@@ -8,11 +8,11 @@
 
 > **Everyone said “Got it.” Everyone meant something different.**
 
-**MeetingAlign is an open-source, evidence-aware Agent Skill that turns a complete meeting recording or transcript into one shared Meeting Truth, role-specific action briefs, and visible alignment gaps.**
+**MeetingAlign is an open-source, evidence-aware Agent Skill that detects what kind of meeting happened, tracks how mature each decision really is, and turns a complete recording or transcript into one shared Meeting Truth, role-specific briefs, guardrails, and visible alignment gaps.**
 
 Raw recordings pass through a traceable transcription quality gate before interpretation. MeetingAlign never substitutes an audio summary for the complete source transcript.
 
-**Meeting → Shared understanding → Role-specific action**
+**Meeting → Meaning → Maturity → Shared action**
 
 ![MeetingAlign concept comic](assets/meetingalign-concept-comic.png)
 
@@ -34,9 +34,17 @@ Execution often fails on the next question:
 - A deadline can exist while the dependency that controls it has no owner.
 - Everyone can say “got it” without confirming the same scope.
 
-MeetingAlign is designed for the gap between **meeting** and **execution**.
+MeetingAlign is designed for the gap between **meeting** and **execution**—without pretending that every strategy, discovery, or brainstorming meeting should already look execution-ready.
 
 ## What it produces
+
+### Meeting Type & Outcome
+
+The Skill distinguishes strategy, decision, kickoff, execution, review, sales, discovery, and brainstorming meetings before judging the output. It records the expected standard and whether the meeting is exploring, setting direction, execution-ready, in execution, or reviewing.
+
+### Decision Maturity
+
+Important statements stay at the highest evidence-supported level: `IDEA`, `HYPOTHESIS`, `DIRECTIONAL_CONSENSUS`, `CONFIRMED_DECISION`, or `COMMITTED_ACTION`. Enthusiasm and silence do not create commitment.
 
 ### Meeting Truth
 
@@ -57,9 +65,11 @@ Each key execution role gets the same shared truth translated into six questions
 5. What is the definition of done?
 6. Who do you depend on?
 
+Each brief can also carry an evidence-based **Don't / Guardrail** so execution boundaries travel with the task.
+
 ### Alignment Gaps
 
-MeetingAlign flags material ambiguity—vague time, quality, or completion; missing owners; missing acceptance criteria; conflicting interpretations; and hidden dependencies—without manufacturing clarity.
+MeetingAlign flags material ambiguity—vague time, quality, or completion; missing owners; missing acceptance criteria; conflicting interpretations; hidden dependencies; maturity mismatch; and readiness mismatch—without manufacturing clarity.
 
 ### Lightweight understanding checks
 
@@ -82,10 +92,11 @@ If reliable transcription is unavailable, it returns `INGESTION_BLOCKED` and pro
 flowchart LR
     A["Recording or transcript"] --> B{"Transcript quality gate"}
     B -- "Blocked" --> X["Stop without semantic output"]
-    B -- "Ready" --> C["Evidence and decision model"]
-    C --> D["One Meeting Truth"]
-    D --> E["Key roles"]
-    D --> F["Alignment gaps"]
+    B -- "Ready" --> C["Meeting type and outcome"]
+    C --> D["Evidence and decision maturity"]
+    D --> T["One Meeting Truth"]
+    T --> E["Key roles"]
+    T --> F["Alignment gaps"]
     E --> G["Role briefs"]
     F --> H["Host View"]
     G --> I["Understanding checks"]
@@ -101,6 +112,10 @@ All role briefs derive from the same Meeting Truth. The Skill may translate prof
 - [Alignment-gap model](methodology/alignment-gap.md)
 - [Alignment Score limits](methodology/alignment-score.md)
 - [Audio-ingestion contract](skills/meeting-align/references/audio-ingestion.md)
+- [Meeting type and outcome](skills/meeting-align/references/meeting-type-and-outcome.md)
+- [Decision maturity](skills/meeting-align/references/decision-maturity.md)
+- [Strategic open questions](skills/meeting-align/references/strategic-open-questions.md)
+- [Role guardrails](skills/meeting-align/references/role-guardrails.md)
 - [System architecture](docs/architecture.md)
 
 ## See the complete demo
@@ -108,12 +123,13 @@ All role briefs derive from the same Meeting Truth. The Skill may translate prof
 The fictional Northstar launch meeting contains vague language, scope cuts, rejected options, cross-functional dependencies, missing owners, and incomplete acceptance criteria.
 
 1. [Raw transcript](examples/launch-meeting/transcript.md)
-2. [Meeting Truth](examples/launch-meeting/meeting-truth.md)
-3. [Host View](examples/launch-meeting/host-view.md)
-4. [Alignment Gaps](examples/launch-meeting/alignment-gaps.md)
-5. [Five Role Briefs](examples/launch-meeting/roles/)
-6. [Understanding Checks](examples/launch-meeting/understanding-checks.md)
-7. [Machine-readable package](examples/launch-meeting/meeting-align.json)
+2. [Meeting Type](examples/launch-meeting/meeting-type.md)
+3. [Meeting Truth](examples/launch-meeting/meeting-truth.md)
+4. [Host View](examples/launch-meeting/host-view.md)
+5. [Alignment Gaps](examples/launch-meeting/alignment-gaps.md)
+6. [Five Role Briefs](examples/launch-meeting/roles/)
+7. [Understanding Checks](examples/launch-meeting/understanding-checks.md)
+8. [Machine-readable package](examples/launch-meeting/meeting-align.json)
 
 The example is entirely synthetic. It demonstrates the contract, not business impact.
 
@@ -127,7 +143,7 @@ cp -R meeting-align/skills/meeting-align ~/.codex/skills/
 Then invoke:
 
 ```text
-Use $meeting-align on this complete meeting recording or transcript. If it is a recording, pass the transcription quality gate first. Create one Meeting Truth, a Host View, role briefs, and only the alignment gaps that can materially change execution. Do not invent transcript coverage, speaker identity, owners, deadlines, or definitions of done.
+Use $meeting-align on this complete meeting recording or transcript. If it is a recording, pass the transcription quality gate first. Classify the meeting type and decision maturity, then create one Meeting Truth, a Host View, role briefs with evidence-based guardrails, and only the gaps that can materially change direction or execution. Do not invent transcript coverage, speaker identity, commitment, owners, deadlines, or definitions of done.
 ```
 
 The Skill follows the open Agent Skills folder structure. Other agent environments may be supported through adaptation, but this repository does not claim untested one-click compatibility.
@@ -153,9 +169,12 @@ The negative tests reject:
 - AI suggestions promoted into meeting decisions;
 - rejected work promoted into an action;
 - action records that hide a missing definition of done;
+- a strategy meeting forced into a kickoff-style action list;
+- directional consensus promoted into a confirmed decision;
+- unsupported role guardrails or the wrong score profile;
 - silence treated as confirmation.
 
-The T00–T10 suite is a deterministic golden-contract baseline, not evidence that every model or runtime will generate the expected result.
+The T00–T15 suite contains 16 deterministic synthetic golden contracts. It is a contract baseline, not evidence that every model or runtime will generate the expected result.
 
 ## What makes it different
 
@@ -164,13 +183,13 @@ The T00–T10 suite is a deterministic golden-contract baseline, not evidence th
 | Transcript | What people said | No shared execution meaning |
 | Meeting summary | What happened | Decisions, proposals, and open issues may blur |
 | Action-item extractor | Tasks and owners | Scope, acceptance, and dependencies may remain implicit |
-| **MeetingAlign** | Shared truth + role translation + visible gaps | Still requires human review and correction |
+| **MeetingAlign** | Meeting semantics + shared truth + role translation + visible gaps | Still requires human review and correction |
 
 MeetingAlign is not a replacement for project management, legal minutes, facilitation, or management judgment. It is a controlled interpretation layer between the transcript and downstream execution.
 
 ## Alignment Score
 
-The optional score explains clarity across decisions, ownership, deadlines, definitions of done, dependencies, and cross-role interpretation. Every deduction must be visible.
+The optional score uses a declared meeting-type profile. Strategy work emphasizes direction, boundaries, maturity visibility, open questions, and next validation; kickoff and execution emphasize ownership, timing, definitions of done, dependencies, and handoffs. When useful, **Execution Readiness** is shown separately. Every deduction must be visible.
 
 It is **not** a scientific measure of people, intelligence, culture, meeting quality, or organizational performance. Never use it for employee ranking, compensation, discipline, or surveillance.
 
@@ -191,15 +210,17 @@ See [Security and privacy](docs/security-and-privacy.md).
 
 ## Current evidence status
 
-**Public preview · v0.3.0 — Audio-Safe Ingestion**
+**Public preview · v0.4.0 — Meeting Semantics**
 
 The repository currently provides:
 
 - an inspectable Agent Skill;
 - a complete synthetic end-to-end demo;
 - a runtime-independent recording-ingestion boundary and quality gate;
+- meeting-type detection, decision-maturity mapping, and outcome-state contracts;
+- strategic open questions, role guardrails, and maturity/readiness gaps;
 - a machine-readable contract and dependency-free validator;
-- deterministic positive and negative tests, including eleven synthetic adversarial contracts;
+- deterministic positive and negative tests, including sixteen synthetic adversarial contracts;
 - bilingual documentation.
 
 It does **not** contain a built-in speech-recognition engine, and it does **not** yet provide independently reviewed evidence that MeetingAlign improves delivery speed, reduces rework, or changes business outcomes. See [Evaluation protocol](docs/evaluation.md).
@@ -211,10 +232,12 @@ It does **not** contain a built-in speech-recognition engine, and it does **not*
 - Meeting Truth
 - audio-safe ingestion gate
 - role detection and briefs
+- meeting type, decision maturity, and outcome state
+- strategic open questions and evidence-based role guardrails
 - alignment gaps
 - understanding checks
 - explanatory score
-- T00–T10 adversarial contracts
+- T00–T15 adversarial contracts
 
 ### V1.x — Team workflow
 
