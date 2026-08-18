@@ -1,4 +1,4 @@
 interface:
   display_name: "MeetingAlign"
-  short_description: "Turn recordings or transcripts into shared execution"
-  default_prompt: "Use $meeting-align to turn this complete meeting recording or transcript into one traceable Meeting Truth, role briefs, and visible alignment gaps."
+  short_description: "Make meeting meaning, maturity, and action explicit"
+  default_prompt: "Use $meeting-align to classify this meeting by type and decision maturity, then produce one traceable Meeting Truth, role briefs, evidence-based guardrails, and material alignment gaps."

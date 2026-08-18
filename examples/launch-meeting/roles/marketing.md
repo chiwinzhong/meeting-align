@@ -27,6 +27,10 @@ Both pilot materials have working links, match Product's approved scope, and hav
 
 Lena for approved product wording, Maya for approval, and the unresolved support owner for the final support contact.
 
+## Don't / Guardrail
+
+Do not create a public campaign, broad announcement, pricing claim, or production-readiness claim. (`E04`)
+
 ## Alignment gap for this role
 
 The support contact and response commitment for the onboarding email are not yet defined.

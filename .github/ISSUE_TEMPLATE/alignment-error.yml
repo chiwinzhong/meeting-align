@@ -32,8 +32,12 @@ body:
       label: Error type
       options:
         - Meeting Truth
+        - Meeting type
+        - Decision maturity
         - Role translation
+        - Role guardrail
         - Alignment gap
+        - Readiness mismatch
         - Owner or deadline
         - Definition of done
         - Dependency

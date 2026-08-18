@@ -13,7 +13,9 @@ For each role:
 3. label the latter `EXECUTION_IMPLICATION`;
 4. preserve unknown deadline or definition-of-done fields;
 5. identify inputs the role needs and downstream roles that depend on it;
-6. produce the six-question brief and one understanding check.
+6. produce the six-question brief, evidence-based guardrail when supported, and one meeting-type-aware understanding check.
+
+Read [role-guardrails.md](role-guardrails.md) before adding any prohibition.
 
 ## Professional depth
 

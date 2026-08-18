@@ -48,10 +48,12 @@ def main():
     }
     blocked_audio["meeting"]["source_status"] = "unverified"
     for section in (
-        "evidence", "decisions", "rejected_or_deferred", "open_questions",
+        "evidence", "decision_maturity", "directional_consensus", "decisions",
+        "rejected_or_deferred", "open_questions", "strategic_open_questions",
         "actions", "alignment_gaps", "roles", "understanding_checks",
     ):
         blocked_audio[section] = []
+    blocked_audio.pop("meeting_semantics", None)
     blocked_audio["alignment_score"] = None
     blocked_audio["review"] = {
         "status": "draft",

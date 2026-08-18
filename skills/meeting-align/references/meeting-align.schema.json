@@ -5,7 +5,7 @@
   "type": "object",
   "required": ["schema_version", "meeting", "evidence", "decisions", "rejected_or_deferred", "open_questions", "actions", "alignment_gaps", "roles", "understanding_checks", "review", "limitations"],
   "properties": {
-    "schema_version": {"enum": ["1.0", "1.1"]},
+    "schema_version": {"enum": ["1.0", "1.1", "1.2"]},
     "ingestion": {
       "type": "object",
       "required": ["input_type", "status", "transcript_path", "coverage", "speaker_labels", "timestamps", "adapter", "limitations"],
@@ -21,11 +21,27 @@
       },
       "additionalProperties": true
     },
+    "meeting_semantics": {
+      "type": "object",
+      "required": ["primary_type", "secondary_types", "confidence", "rationale", "expected_output_standard", "outcome_state"],
+      "properties": {
+        "primary_type": {"enum": ["STRATEGY_CO_CREATION", "DECISION_MEETING", "PROJECT_KICKOFF", "EXECUTION_STATUS", "REVIEW_RETROSPECTIVE", "SALES_CLIENT", "INTERVIEW_DISCOVERY", "BRAINSTORM_IDEATION"]},
+        "secondary_types": {"type": "array", "items": {"type": "string"}},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "rationale": {"type": "string", "minLength": 1},
+        "expected_output_standard": {"type": "string", "minLength": 1},
+        "outcome_state": {"enum": ["EXPLORING", "DIRECTION_SET", "EXECUTION_READY", "IN_EXECUTION", "REVIEWING"]}
+      },
+      "additionalProperties": true
+    },
     "meeting": {"type": "object"},
     "evidence": {"type": "array"},
+    "decision_maturity": {"type": "array"},
+    "directional_consensus": {"type": "array"},
     "decisions": {"type": "array"},
     "rejected_or_deferred": {"type": "array"},
     "open_questions": {"type": "array"},
+    "strategic_open_questions": {"type": "array"},
     "actions": {"type": "array"},
     "alignment_gaps": {"type": "array"},
     "roles": {"type": "array"},
@@ -35,8 +51,12 @@
   },
   "allOf": [
     {
-      "if": {"properties": {"schema_version": {"const": "1.1"}}},
+      "if": {"properties": {"schema_version": {"enum": ["1.1", "1.2"]}}},
       "then": {"required": ["ingestion"]}
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "1.2"}, "ingestion": {"properties": {"status": {"enum": ["not_required", "transcript_ready"]}}}}},
+      "then": {"required": ["meeting_semantics", "decision_maturity", "directional_consensus", "strategic_open_questions"]}
     },
     {
       "if": {
@@ -46,9 +66,12 @@
       "then": {
         "properties": {
           "evidence": {"maxItems": 0},
+          "decision_maturity": {"maxItems": 0},
+          "directional_consensus": {"maxItems": 0},
           "decisions": {"maxItems": 0},
           "rejected_or_deferred": {"maxItems": 0},
           "open_questions": {"maxItems": 0},
+          "strategic_open_questions": {"maxItems": 0},
           "actions": {"maxItems": 0},
           "alignment_gaps": {"maxItems": 0},
           "roles": {"maxItems": 0},
