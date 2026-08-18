@@ -5,18 +5,57 @@
   "type": "object",
   "required": ["schema_version", "meeting", "evidence", "decisions", "rejected_or_deferred", "open_questions", "actions", "alignment_gaps", "roles", "understanding_checks", "review", "limitations"],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"enum": ["1.0", "1.1"]},
+    "ingestion": {
+      "type": "object",
+      "required": ["input_type", "status", "transcript_path", "coverage", "speaker_labels", "timestamps", "adapter", "limitations"],
+      "properties": {
+        "input_type": {"enum": ["recording", "transcript", "detailed_record"]},
+        "status": {"enum": ["not_required", "transcript_ready", "blocked"]},
+        "transcript_path": {"type": ["string", "null"]},
+        "coverage": {"enum": ["complete", "partial", "unknown"]},
+        "speaker_labels": {"enum": ["named", "neutral", "mixed", "unavailable"]},
+        "timestamps": {"enum": ["full", "partial", "unavailable"]},
+        "adapter": {"type": "string", "minLength": 1},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
     "meeting": {"type": "object"},
-    "evidence": {"type": "array", "minItems": 1},
+    "evidence": {"type": "array"},
     "decisions": {"type": "array"},
     "rejected_or_deferred": {"type": "array"},
     "open_questions": {"type": "array"},
     "actions": {"type": "array"},
     "alignment_gaps": {"type": "array"},
-    "roles": {"type": "array", "minItems": 1},
-    "understanding_checks": {"type": "array", "minItems": 1},
+    "roles": {"type": "array"},
+    "understanding_checks": {"type": "array"},
     "review": {"type": "object"},
     "limitations": {"type": "array", "minItems": 1}
   },
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": "1.1"}}},
+      "then": {"required": ["ingestion"]}
+    },
+    {
+      "if": {
+        "required": ["ingestion"],
+        "properties": {"ingestion": {"properties": {"status": {"const": "blocked"}}}}
+      },
+      "then": {
+        "properties": {
+          "evidence": {"maxItems": 0},
+          "decisions": {"maxItems": 0},
+          "rejected_or_deferred": {"maxItems": 0},
+          "open_questions": {"maxItems": 0},
+          "actions": {"maxItems": 0},
+          "alignment_gaps": {"maxItems": 0},
+          "roles": {"maxItems": 0},
+          "understanding_checks": {"maxItems": 0}
+        }
+      }
+    }
+  ],
   "additionalProperties": true
 }

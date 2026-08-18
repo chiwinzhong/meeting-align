@@ -20,6 +20,12 @@ GAP_TYPES = {
 }
 CHECK_STATUS = {"pending", "aligned", "needs_correction"}
 REVIEW_STATUS = {"draft", "reviewed", "approved"}
+SCHEMA_VERSIONS = {"1.0", "1.1"}
+INPUT_TYPES = {"recording", "transcript", "detailed_record"}
+INGESTION_STATUS = {"not_required", "transcript_ready", "blocked"}
+COVERAGE = {"complete", "partial", "unknown"}
+SPEAKER_LABELS = {"named", "neutral", "mixed", "unavailable"}
+TIMESTAMP_STATUS = {"full", "partial", "unavailable"}
 
 
 def require(condition, message, errors):
@@ -45,7 +51,42 @@ def validate(data):
     if errors:
         return errors
 
-    require(data.get("schema_version") == "1.0", "schema_version must be 1.0", errors)
+    schema_version = data.get("schema_version")
+    require(schema_version in SCHEMA_VERSIONS, "schema_version must be 1.0 or 1.1", errors)
+
+    ingestion = data.get("ingestion")
+    if schema_version == "1.1":
+        require(isinstance(ingestion, dict), "schema 1.1 requires ingestion object", errors)
+    if isinstance(ingestion, dict):
+        for field in ("input_type", "status", "transcript_path", "coverage", "speaker_labels", "timestamps", "adapter", "limitations"):
+            require(field in ingestion, f"ingestion.{field} is required", errors)
+        input_type = ingestion.get("input_type")
+        status = ingestion.get("status")
+        require(input_type in INPUT_TYPES, "ingestion.input_type is invalid", errors)
+        require(status in INGESTION_STATUS, "ingestion.status is invalid", errors)
+        require(ingestion.get("coverage") in COVERAGE, "ingestion.coverage is invalid", errors)
+        require(ingestion.get("speaker_labels") in SPEAKER_LABELS, "ingestion.speaker_labels is invalid", errors)
+        require(ingestion.get("timestamps") in TIMESTAMP_STATUS, "ingestion.timestamps is invalid", errors)
+        require(bool(ingestion.get("adapter")), "ingestion.adapter is required", errors)
+        require(isinstance(ingestion.get("limitations"), list), "ingestion.limitations must be an array", errors)
+
+        if input_type == "recording":
+            require(status in {"transcript_ready", "blocked"}, "recording ingestion must be transcript_ready or blocked", errors)
+        else:
+            require(status != "blocked", "non-recording input cannot use blocked ingestion status", errors)
+
+        if status == "transcript_ready":
+            require(bool(ingestion.get("transcript_path")), "transcript_ready requires ingestion.transcript_path", errors)
+            require(ingestion.get("coverage") == "complete", "transcript_ready requires complete coverage", errors)
+
+        if status == "blocked":
+            semantic_sections = (
+                "evidence", "decisions", "rejected_or_deferred", "open_questions",
+                "actions", "alignment_gaps", "roles", "understanding_checks",
+            )
+            for section in semantic_sections:
+                require(not data.get(section), f"blocked ingestion requires empty {section}", errors)
+            require(data.get("alignment_score") is None, "blocked ingestion cannot include alignment_score", errors)
     meeting = data.get("meeting", {})
     for field in ("id", "title", "date", "purpose", "source_status"):
         require(bool(meeting.get(field)), f"meeting.{field} is required", errors)
@@ -69,6 +110,17 @@ def validate(data):
                 require(evidence_id in evidence_ids, f"{section} {item.get('id')} references unknown evidence {evidence_id}", errors)
             require(bool(item.get("evidence_ids")), f"{section} {item.get('id')} requires evidence_ids", errors)
 
+    allowed_section_evidence = {
+        "decisions": {"CONFIRMED_DECISION"},
+        "rejected_or_deferred": {"REJECTED_OPTION", "DEFERRED_OPTION"},
+        "open_questions": {"OPEN_QUESTION"},
+    }
+    for section, allowed_types in allowed_section_evidence.items():
+        for item in data.get(section, []):
+            for evidence_id in item.get("evidence_ids", []):
+                evidence_type = evidence_by_id.get(evidence_id, {}).get("type")
+                require(evidence_type in allowed_types, f"{section} {item.get('id')} references incompatible evidence {evidence_id}", errors)
+
     action_ids = collect_ids(data.get("actions", []), "action", errors)
     for item in data.get("actions", []):
         action_id = item.get("id")
@@ -80,6 +132,11 @@ def validate(data):
         for evidence_id in item.get("evidence_ids", []):
             require(evidence_id in evidence_ids, f"action {action_id} references unknown evidence {evidence_id}", errors)
         require(bool(item.get("evidence_ids")), f"action {action_id} requires evidence_ids", errors)
+        for evidence_id in item.get("evidence_ids", []):
+            evidence_type = evidence_by_id.get(evidence_id, {}).get("type")
+            require(evidence_type not in {"REJECTED_OPTION", "DEFERRED_OPTION", "OPEN_QUESTION", "AI_SUGGESTION"}, f"action {action_id} references non-action evidence {evidence_id}", errors)
+        action_evidence_types = {evidence_by_id.get(evidence_id, {}).get("type") for evidence_id in item.get("evidence_ids", [])}
+        require("CONFIRMED_DECISION" in action_evidence_types, f"action {action_id} requires confirmed-decision evidence", errors)
 
     gap_ids = collect_ids(data.get("alignment_gaps", []), "alignment gap", errors)
     for item in data.get("alignment_gaps", []):
@@ -118,19 +175,14 @@ def validate(data):
     review = data.get("review", {})
     require(review.get("status") in REVIEW_STATUS, "review.status is invalid", errors)
     require(isinstance(review.get("external_actions_authorized"), bool), "review.external_actions_authorized must be boolean", errors)
+    if isinstance(ingestion, dict) and ingestion.get("status") == "blocked":
+        require(review.get("status") == "draft", "blocked ingestion review must remain draft", errors)
+        require(review.get("external_actions_authorized") is False, "blocked ingestion cannot authorize external actions", errors)
     if review.get("status") == "approved":
         require(review.get("reviewer") not in {None, "", "not yet defined"}, "approved package requires a named reviewer", errors)
 
     require(bool(data.get("limitations")), "limitations must not be empty", errors)
 
-    decision_evidence = {
-        evidence_id
-        for item in data.get("decisions", [])
-        for evidence_id in item.get("evidence_ids", [])
-    }
-    for evidence_id in decision_evidence:
-        evidence_type = evidence_by_id.get(evidence_id, {}).get("type")
-        require(evidence_type == "CONFIRMED_DECISION", f"decision references non-decision evidence {evidence_id}", errors)
     return errors
 
 

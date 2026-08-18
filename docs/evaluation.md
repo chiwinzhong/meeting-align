@@ -11,9 +11,13 @@ python3 skills/meeting-align/scripts/validate_meeting_align.py \
   examples/launch-meeting/meeting-align.json
 python3 skills/meeting-align/scripts/run_contract_tests.py \
   examples/launch-meeting/meeting-align.json
+python3 tools/run_adversarial_contracts.py \
+  tests/adversarial-contracts.json
 ```
 
-The package passes only when decisions point to allowed evidence, required action fields are visible, AI suggestions do not become decisions, and silence is not counted as alignment.
+The package passes only when the recording quality gate is respected, decisions point to allowed evidence, rejected work stays out of actions, required action fields are visible, AI suggestions do not become decisions, and silence is not counted as alignment.
+
+The T00–T10 suite is a set of synthetic golden-output contracts. It protects documented expectations and test-harness behavior; it is not a generative benchmark and does not prove that every model produces those outputs from raw text.
 
 ## Level 2 — Human review against a transcript
 
@@ -29,6 +33,7 @@ Use two reviewers who did not generate the package. For each high-impact item, r
 | Gap recall | Did the output miss an ambiguity that later caused different interpretations? |
 | Cross-role consistency | Do all briefs preserve the same decision and scope? |
 | Unsupported-content rate | How many output claims lack transcript support? |
+| Ingestion coverage | Did a recording produce a complete, ordered, traceable transcript before interpretation? |
 
 Reviewers should resolve disagreements and retain both the initial score and the adjudicated result.
 

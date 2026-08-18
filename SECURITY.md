@@ -8,6 +8,6 @@ Use GitHub's private vulnerability reporting for this repository when available.
 
 ## Data boundary
 
-The open Skill does not require a hosted MeetingAlign service and does not transmit data by itself. The agent environment, transcription tool, model provider, storage system, and integrations selected by the user may process data under their own policies. Review them before using real meetings.
+The open Skill does not require a hosted MeetingAlign service, contain a speech-recognition engine, or transmit data by itself. The agent environment, transcription tool, model provider, storage system, and integrations selected by the user may process data under their own policies. Confirm authority to record, transcribe, retain, and process the source before using them with real meetings.
 
 Never commit real meeting transcripts, credentials, access tokens, customer data, personal data, regulated information, or unredacted internal decisions to this repository.

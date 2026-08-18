@@ -27,10 +27,14 @@ REQUIRED_FILES = [
     SKILL_FILE,
     SKILL_DIR / "agents" / "openai.yaml",
     SKILL_DIR / "references" / "meeting-align.schema.json",
+    SKILL_DIR / "references" / "audio-ingestion.md",
     SKILL_DIR / "assets" / "meeting-align-template.json",
     SKILL_DIR / "scripts" / "validate_meeting_align.py",
     SKILL_DIR / "scripts" / "run_contract_tests.py",
     ROOT / "examples" / "launch-meeting" / "meeting-align.json",
+    ROOT / "tests" / "adversarial-contracts.json",
+    ROOT / "tools" / "run_adversarial_contracts.py",
+    ROOT / ".github" / "ISSUE_TEMPLATE" / "alignment-error.yml",
 ]
 
 
@@ -84,6 +88,7 @@ def main() -> int:
         SKILL_DIR / "references" / "meeting-align.schema.json",
         SKILL_DIR / "assets" / "meeting-align-template.json",
         ROOT / "examples" / "launch-meeting" / "meeting-align.json",
+        ROOT / "tests" / "adversarial-contracts.json",
     ]:
         with json_path.open(encoding="utf-8") as handle:
             json.load(handle)

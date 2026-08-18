@@ -22,6 +22,8 @@ python3 skills/meeting-align/scripts/validate_meeting_align.py \
   examples/launch-meeting/meeting-align.json
 python3 skills/meeting-align/scripts/run_contract_tests.py \
   examples/launch-meeting/meeting-align.json
+python3 tools/run_adversarial_contracts.py \
+  tests/adversarial-contracts.json
 ```
 
 Pull requests should explain what changed, why the change improves alignment rather than output volume, which failure case it addresses, and how it was tested.
